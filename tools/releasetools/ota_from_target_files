@@ -406,11 +406,13 @@ def WriteFullOTAPackage(input_zip, output_zip):
   script.Print("")
   script.Print("************************************************")
   script.Print("*                                              *")
-  script.Print("*              Team Horizon Presents           *")
-  script.Print("*                     XenonHD	               *")
+  script.Print("*             Team Horizon Presents            *")
+  script.Print("*                    XenonHD                   *")
   script.Print("************************************************")
   script.Print("")
   script.Print("Installing system files...")
+  script.Print("Prepare to broaden your horizon!")
+  script.Print("Welcome to Xenon HD") 
 
   if OPTIONS.wipe_user_data:
     script.FormatPartition("/data")
