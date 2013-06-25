@@ -8,6 +8,8 @@ TARGET_KERNEL_SOURCE ?= $(TARGET_AUTO_KDIR)
 KERNEL_SRC := $(TARGET_KERNEL_SOURCE)
 # kernel configuration - mandatory
 KERNEL_DEFCONFIG := $(TARGET_KERNEL_CONFIG)
+# kernel path
+KERNEL_PATH := $(TARGET_KERNEL_SOURCE)/arch/arm/configs/$(TARGET_KERNEL_CONFIG)
 VARIANT_DEFCONFIG := $(TARGET_KERNEL_VARIANT_CONFIG)
 SELINUX_DEFCONFIG := $(TARGET_KERNEL_SELINUX_CONFIG)
 
@@ -83,6 +85,14 @@ else
             KERNEL_BIN := $(TARGET_PREBUILT_INT_KERNEL)
         endif
     endif
+endif
+
+ifeq ($(TARGET_KERNEL_CUSTOM_RAMDISK),true)
+    $(shell sed -i "s;CONFIG_INITRAMFS_SOURCE=\"\.\.;CONFIG_INITRAMFS_SOURCE=\"source/\.\.;" $(KERNEL_PATH))
+endif
+
+ifeq ($(TARGET_KERNEL_SUPPORTS_HUGEMEM),true)
+    $(shell if [ "`grep HUGEMEM $(KERNEL_PATH)`" == "" ]; then echo "CONFIG_S5P_HUGEMEM=y" >> $(KERNEL_PATH); fi)
 endif
 
 ifeq ($(FULL_KERNEL_BUILD),true)
