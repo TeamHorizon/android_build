@@ -571,6 +571,10 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.ValidateSignatures("data")
   script.Unmount("/data")
 
+  script.Mount("/data")
+  script.ValidateSignatures("data")
+  script.Unmount("/data")
+
   if OPTIONS.backuptool:
     script.Mount("/system")
     script.RunBackup("backup")
