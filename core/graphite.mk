@@ -1,5 +1,5 @@
 # Copyright (C) 2014 The SaberMod Project
-#
+# Copyright (C) 2014 Joe Maples
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,14 +14,21 @@
 #
 # Graphite agruments.
 GRAPHITE_FLAGS := -Qunused-arguments,-fgraphite,-floop-flatten,-floop-parallelize-all,-ftree-loop-linear,-floop-interchange,-floop-strip-mine,-floop-block
-ifdef LOCAL_CFLAGS
-LOCAL_CFLAGS += $(call cc-option,$(GRAPHITE_FLAGS))
+# Link Time Optimizations for large performance boosts on optimizable binaries
+# Define "LTO := true" on files that include graphite.mk and can be optimized
+ifdef LTO
+	GRAPHITE_FLAGS += -lto
 else
-LOCAL_CFLAGS := $(call cc-option,$(GRAPHITE_FLAGS))
+endif
+# Add flags
+ifdef LOCAL_CFLAGS
+	LOCAL_CFLAGS += $(call cc-option,$(GRAPHITE_FLAGS))
+else
+	LOCAL_CFLAGS := $(call cc-option,$(GRAPHITE_FLAGS))
 endif
 ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += $(call cpp-option,$(GRAPHITE_FLAGS))
+	LOCAL_CPPFLAGS += $(call cpp-option,$(GRAPHITE_FLAGS))
 else
-LOCAL_CPPFLAGS := $(call cpp-option,$(GRAPHITE_FLAGS))
+	LOCAL_CPPFLAGS := $(call cpp-option,$(GRAPHITE_FLAGS))
 endif
 #####
