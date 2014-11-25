@@ -29,6 +29,13 @@ EOF
     done
     echo $A
 }
+# Define optimizations to use
+if GRAPHITE=false; then
+	USE_GRAPHITE=false
+else 
+	export SE_GRAPHITE=true
+fi
+
 
 # Get the value of a build variable as an absolute path.
 function get_abs_build_var()
