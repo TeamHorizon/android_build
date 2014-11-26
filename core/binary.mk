@@ -102,6 +102,8 @@ ifeq ($(strip $(USE_GRAPHITE)),true)
   include $(BUILD_SYSTEM)/graphite.mk
 else
 endif
+# Define LTO for binary optimization
+LTO := true
 
 # The following LOCAL_ variables will be modified in this file.
 # Because the same LOCAL_ variables may be used to define modules for both 1st arch and 2nd arch,
