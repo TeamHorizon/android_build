@@ -51,6 +51,12 @@ endif
 include $(TARGET_ARCH_SPECIFIC_MAKEFILE)
 include $(BUILD_SYSTEM)/combo/fdo.mk
 
+# Include graphite flags in all builds.
+ifeq ($(strip $(USE_GRAPHITE)),true)
+include $(BUILD_SYSTEM)/graphite.mk
+else
+endif
+
 # You can set TARGET_TOOLS_PREFIX to get gcc from somewhere else
 ifeq ($(strip $($(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX)),)
 $(combo_2nd_arch_prefix)TARGET_TOOLCHAIN_ROOT := prebuilts/gcc/$(HOST_PREBUILT_TAG)/arm/arm-linux-androideabi-$($(combo_2nd_arch_prefix)TARGET_GCC_VERSION)
