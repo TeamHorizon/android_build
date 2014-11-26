@@ -31,4 +31,29 @@ ifdef LOCAL_CPPFLAGS
 else
 	LOCAL_CPPFLAGS := $(call cpp-option,$(GRAPHITE_FLAGS))
 endif
+ifdef LOCAL_CPPFLAGS
+	LOCAL_CPPFLAGS += $(call cpp-option,$(GRAPHITE_FLAGS))
+else
+	LOCAL_CPPFLAGS := $(call cpp-option,$(GRAPHITE_FLAGS))
+endif
+ifdef $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS
+	$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += $(call cc-option,$(GRAPHITE_FLAGS))
+else
+endif
+ifdef $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS
+	$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += $(call cc-option,$(GRAPHITE_FLAGS))
+else
+endif
+ifdef $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS
+	$(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += $(call cc-option,$(GRAPHITE_FLAGS))
+else
+endif
+ifdef $(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS
+	$(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS += $(call cpp-option,$(GRAPHITE_FLAGS))
+else
+endif
+ifdef $(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS
+	$(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS += $(call cc-option,$(GRAPHITE_FLAGS))
+else
+endif
 #####
