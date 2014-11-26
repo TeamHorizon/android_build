@@ -33,7 +33,7 @@ EOF
 if GRAPHITE=false; then
 	USE_GRAPHITE=false
 else 
-	export SE_GRAPHITE=true
+#	export USE_GRAPHITE=true
 fi
 
 
