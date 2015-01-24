@@ -122,9 +122,13 @@ function setpaths()
     gccprebuiltdir=$(get_abs_build_var ANDROID_GCC_PREBUILTS)
 
     # defined in core/config.mk
-    targetgccversion=$(get_build_var TARGET_GCC_VERSION)
+    targetandgccversion=$(get_build_var TARGET_AND_GCC_VERSION)
     targetgccversion2=$(get_build_var 2ND_TARGET_GCC_VERSION)
-    export TARGET_GCC_VERSION=$targetgccversion
+    export TARGET_AND_GCC_VERSION=$targetandgccversion
+
+    # defined in core/config.mk
+    targetkernelgccversion=$(get_build_var TARGET_KERNEL_GCC_VERSION)
+    export TARGET_KERNEL_GCC_VERSION=$targetkernelgccversion
 
     # The gcc toolchain does not exists for windows/cygwin. In this case, do not reference it.
     export ANDROID_TOOLCHAIN=
@@ -135,9 +139,9 @@ function setpaths()
             ;;
         x86_64) toolchaindir=x86/x86_64-linux-android-$targetgccversion/bin
             ;;
-        arm) toolchaindir=arm/arm-linux-androideabi-$targetgccversion/bin
+        arm) toolchaindir=arm/arm-linux-androideabi-$targetandgccversion/bin
             ;;
-        arm64) toolchaindir=aarch64/aarch64-linux-android-$targetgccversion/bin;
+        arm64) toolchaindir=aarch64/aarch64-linux-android-$targetandgccversion/bin;
                toolchaindir2=arm/arm-linux-androideabi-$targetgccversion2/bin
             ;;
         mips|mips64) toolchaindir=mips/mips64el-linux-android-$targetgccversion/bin
@@ -159,10 +163,18 @@ function setpaths()
     case $ARCH in
         arm)
             # Legacy toolchain configuration used for ARM kernel compilation
-            toolchaindir=arm/arm-eabi-$targetgccversion/bin
+            toolchaindir=arm/arm-eabi-$targetkernelgccversion/bin
             if [ -d "$gccprebuiltdir/$toolchaindir" ]; then
                  export ARM_EABI_TOOLCHAIN="$gccprebuiltdir/$toolchaindir"
-                 ANDROID_KERNEL_TOOLCHAIN_PATH="$ARM_EABI_TOOLCHAIN":
+                 export ANDROID_KERNEL_TOOLCHAIN_PATH="$ARM_EABI_TOOLCHAIN":
+            fi
+            ;;
+        arm64)
+            # Legacy toolchain configuration used for ARM64 kernel compilation
+            toolchaindir=aarch64/aarch64-$targetkernelgccversion/bin
+            if [ -d "$gccprebuiltdir/$toolchaindir" ]; then
+                 export AARCH64_TOOLCHAIN="$gccprebuiltdir/$toolchaindir"
+                 export ANDROID_KERNEL_TOOLCHAIN_PATH="$AARCH64_TOOLCHAIN":
             fi
             ;;
         *)
