@@ -171,7 +171,7 @@ function setpaths()
             ;;
         arm64)
             # Legacy toolchain configuration used for ARM64 kernel compilation
-            toolchaindir=aarch64/aarch64-$targetkernelgccversion/bin
+            toolchaindir=aarch64/aarch64-linux-android-$targetkernelgccversion/bin
             if [ -d "$gccprebuiltdir/$toolchaindir" ]; then
                  export AARCH64_TOOLCHAIN="$gccprebuiltdir/$toolchaindir"
                  export ANDROID_KERNEL_TOOLCHAIN_PATH="$AARCH64_TOOLCHAIN":
