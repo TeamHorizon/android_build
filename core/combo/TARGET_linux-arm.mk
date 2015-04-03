@@ -78,8 +78,7 @@ endif
 
 # You can set TARGET_KERNEL_TOOLS_PREFIX to get gcc from somewhere else
 ifeq ($(strip $($(combo_2nd_arch_prefix)TARGET_KERNEL_TOOLS_PREFIX)),)
-$(combo_2nd_arch_prefix)TARGET_KERNEL_TOOLCHAIN_ROOT := prebuilts/gcc/$(HOST_PREBUILT_TAG)/arm/arm-eabi-$($(combo_2nd_arch_prefix)TARGET_KERNEL_GCC_VERSION)
-$(combo_2nd_arch_prefix)TARGET_KERNEL_TOOLS_PREFIX := $($(combo_2nd_arch_prefix)TARGET_KERNEL_TOOLCHAIN_ROOT)/bin/arm-eabi-
+TARGET_KERNEL_TOOLS_PREFIX := arm-eabi-
 endif
 
 # Android compiler binaries
