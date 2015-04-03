@@ -78,8 +78,8 @@ endif
 
 # You can set TARGET_KERNEL_TOOLS_PREFIX to get gcc from somewhere else
 ifeq ($(strip $(TARGET_KERNEL_TOOLS_PREFIX)),)
-TARGET_KERNEL_TOOLCHAIN_ROOT := prebuilts/gcc/$(HOST_PREBUILT_TAG)/aarch64/aarch64-linux-android-$(TARGET_KERNEL_GCC_VERSION)
-TARGET_KERNEL_TOOLS_PREFIX := $(TARGET_KERNEL_TOOLCHAIN_ROOT)/bin/aarch64-linux-android-
+TARGET_KERNEL_TOOLCHAIN_ROOT := prebuilts/gcc/$(HOST_PREBUILT_TAG)/aarch64/aarch64-$(TARGET_KERNEL_GCC_VERSION)
+TARGET_KERNEL_TOOLS_PREFIX := $(TARGET_KERNEL_TOOLCHAIN_ROOT)/bin/aarch64-
 endif
 
 # Android compiler binaries
