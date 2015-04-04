@@ -48,6 +48,11 @@ else
 $(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(TARGET_SM_AND)
 endif
 
+# Allow a second arch combo to override the ROM toolchain version
+ifdef 2ND_TARGET_SM_AND
+$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(2ND_TARGET_SM_AND)
+endif
+
 # Decouple kernel compiler version from android compiler version
 ifeq ($(strip $(TARGET_SM_KERNEL)),)
 $(combo_2nd_arch_prefix)TARGET_KERNEL_GCC_VERSION := $($(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION)
