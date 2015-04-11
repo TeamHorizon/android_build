@@ -123,6 +123,31 @@ ifeq ($(strip $(O3_OPTIMIZATIONS)),true)
   include $(BUILD_SYSTEM)/O3.mk
 endif
 
+# Extra SaberMod C flags for gcc and clang
+# These are most likely arch specific do no bother including the host compiler.
+ifdef EXTRA_SABERMOD_CFLAGS
+  ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
+    ifneq ($(strip $(LOCAL_CLANG)),true)
+      ifdef LOCAL_CFLAGS
+        LOCAL_CFLAGS += $(EXTRA_SABERMOD_GCC_CFLAGS)
+      else
+        LOCAL_CFLAGS := $(EXTRA_SABERMOD_GCC_CFLAGS)
+      endif
+      ifdef EXTRA_SABERMOD_AND_GCC_CFLAGS
+        LOCAL_CFLAGS += $(EXTRA_SABERMOD_AND_GCC_CFLAGS)
+      endif
+    else
+      ifdef LOCAL_CFLAGS
+        LOCAL_CFLAGS += $(EXTRA_SABERMOD_CLANG_CFLAGS)
+      else
+        LOCAL_CFLAGS := $(EXTRA_SABERMOD_CLANG_CFLAGS)
+      endif
+    endif
+  endif
+endif
+
+
+
 # posix thread (pthread) support
 ifeq ($(strip $(ENABLE_PTHREAD)),true)
   include $(BUILD_SYSTEM)/pthread.mk
@@ -142,11 +167,13 @@ endif
 # See vendor or device trees for more info.  Add more sections below and to vendor/name/configs/sm.mk if need be.
 
 # modules that need -Wno-error=maybe-uninitialized
-ifeq (1,$(words $(filter $(MAYBE_UNINITIALIZED),$(LOCAL_MODULE))))
-  ifdef LOCAL_CFLAGS
-    LOCAL_CFLAGS += -Wno-error=maybe-uninitialized
-  else
-    LOCAL_CFLAGS := -Wno-error=maybe-uninitialized
+ifdef MAYBE_UNINITIALIZED
+  ifeq (1,$(words $(filter $(MAYBE_UNINITIALIZED),$(LOCAL_MODULE))))
+    ifdef LOCAL_CFLAGS
+      LOCAL_CFLAGS += -Wno-error=maybe-uninitialized
+    else
+      LOCAL_CFLAGS := -Wno-error=maybe-uninitialized
+    endif
   endif
 endif
 
