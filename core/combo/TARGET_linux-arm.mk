@@ -34,23 +34,11 @@ ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT)),)
 TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT := armv5te
 endif
 
-# Decouple NDK library selection with platform compiler version
-$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.9
-
 # Decouple android compiler version from kernel compiler version
-ifeq ($(strip $(TARGET_SM_AND)),)
-ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
+ifneq ($(strip $(USE_LEGACY_NDK),true)
+$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := 4.9
+else
 $(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := 4.8
-else
-$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
-endif
-else
-$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(TARGET_SM_AND)
-endif
-
-# Allow a second arch combo to override the ROM toolchain version
-ifdef 2ND_TARGET_SM_AND
-$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(2ND_TARGET_SM_AND)
 endif
 
 # Decouple kernel compiler version from android compiler version
@@ -60,11 +48,25 @@ else
 $(combo_2nd_arch_prefix)TARGET_KERNEL_GCC_VERSION := $(TARGET_SM_KERNEL)
 endif
 
-# Allow overriding of NDK toolchain version
-ifdef TARGET_NDK_VERSION
-
-# Decouple NDK library selection with platform compiler version
+# Allow overriding of NDK library selection
+ifeq ($(strip $(TARGET_NDK_VERSION)),)
+ifeq ($(strip $(TARGET_SM_AND)),)
+$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.8
+else
+$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := $(TARGET_SM_AND)
+endif
+else
 $(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := $(TARGET_NDK_VERSION)
+endif
+
+# Allow a second arch combo to override the ROM toolchain version
+ifdef 2ND_TARGET_SM_AND_VERSION
+$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(2ND_TARGET_SM_AND)
+endif
+
+# Allow a second arch combo to override the NDK library selection
+ifdef 2ND_TARGET_NDK_VERSION
+$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := $(2ND_TARGET_NDK_VERSION)
 endif
 
 TARGET_ARCH_SPECIFIC_MAKEFILE := $(BUILD_COMBOS)/arch/$(TARGET_$(combo_2nd_arch_prefix)ARCH)/$(TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT).mk

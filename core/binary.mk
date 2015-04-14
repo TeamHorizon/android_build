@@ -146,8 +146,6 @@ ifdef EXTRA_SABERMOD_CFLAGS
   endif
 endif
 
-
-
 # posix thread (pthread) support
 ifeq ($(strip $(ENABLE_PTHREAD)),true)
   include $(BUILD_SYSTEM)/pthread.mk
