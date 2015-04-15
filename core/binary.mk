@@ -124,7 +124,7 @@ ifeq ($(strip $(O3_OPTIMIZATIONS)),true)
 endif
 
 # Extra SaberMod C flags for gcc and clang
-# These are most likely arch specific do not bother including the host compiler.
+# These are most likely arch specific, so do not bother including the host compiler.
 ifdef EXTRA_SABERMOD_CFLAGS
   ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
     ifneq ($(strip $(LOCAL_CLANG)),true)
