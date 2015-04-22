@@ -14,14 +14,13 @@
 #
 
 ifneq (1,$(words $(filter $(LOCAL_DISABLE_O3),$(LOCAL_MODULE))))
-  ifdef LOCAL_CONLYFLAGS
-    LOCAL_CONLYFLAGS += $(O3_FLAGS)
+  ifdef LOCAL_CFLAGS
+    LOCAL_CFLAGS += $(O3_FLAGS)
   else
-    LOCAL_CONLYFLAGS := $(O3_FLAGS)
+    LOCAL_CFLAGS := $(O3_FLAGS)
   endif
-  ifdef LOCAL_CPPFLAGS
-    LOCAL_CPPFLAGS += $(O3_FLAGS)
-  else
-    LOCAL_CPPFLAGS := $(O3_FLAGS)
-  endif
+  LOCAL_O3_OPTIMIZATIONS_MODE := on
+else
+  LOCAL_O3_OPTIMIZATIONS_MODE := off
 endif
+

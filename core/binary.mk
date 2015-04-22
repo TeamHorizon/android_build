@@ -113,9 +113,20 @@ endif
 # limitations under the License.
 ##########################################################################
 
-# O3
+# O3 optimzations
+# To turn on set "O3_OPTIMIZATIONS := true" in device makefile.
+# To disable -O3 optimizations on thumb set "DISABLE_O3_OPTIMIZATIONS_THUMB := true" in device makefile.
+# DISABLE_O3_OPTIMIZATIONS_THUMB should be dependent on "O3_OPTIMIZATIONS := true", otherwise it's useless.
+# LOCAL_O3_OPTIMIZATIONS_MODE is for other flag configurations to use, not for device configurations.
+# Big thanks to Joe Maples for the arm mode to replace thumb mode, and Sebastian Jena for the unveiling the arm thumb mode.
 ifeq ($(strip $(O3_OPTIMIZATIONS)),true)
-  include $(BUILD_SYSTEM)/O3.mk
+  ifneq ($(strip $(LOCAL_ARM_MODE))-$(strip $(DISABLE_O3_OPTIMIZATIONS_THUMB)),thumb-true)
+    include $(BUILD_SYSTEM)/O3.mk
+  else
+    LOCAL_O3_OPTIMIZATIONS_MODE := off
+  endif
+else
+  LOCAL_O3_OPTIMIZATIONS_MODE := off
 endif
 
 # Extra sabermod variables

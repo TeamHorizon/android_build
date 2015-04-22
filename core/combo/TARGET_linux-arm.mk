@@ -162,14 +162,19 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_LDFLAGS += \
 			-Wl,--icf=safe \
 			$(arch_variant_ldflags)
 
+# If -O3 optimizations is turned on but disabled for thumb, set a arm mode for globabl flags instead of thumb.
+ifneq ($(strip $(O3_OPTIMIZATIONS))-$(strip $(DISABLE_O3_OPTIMIZATIONS_THUMB)),true-true)
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -mthumb-interwork
+else
+$(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -marm
+endif
+
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
 $(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS := -DNDEBUG -Wstrict-aliasing=2 -fgcse-after-reload -frerun-cse-after-loop -frename-registers
 
 libc_root := bionic/libc
 libm_root := bionic/libm
 libstdc++_root := bionic/libstdc++
-
 
 ## on some hosts, the target cross-compiler is not available so do not run this command
 ifneq ($(wildcard $($(combo_2nd_arch_prefix)TARGET_CC)),)

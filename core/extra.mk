@@ -23,6 +23,11 @@ ifdef EXTRA_SABERMOD_GCC_CFLAGS
       else
         LOCAL_CFLAGS := $(EXTRA_SABERMOD_GCC_CFLAGS)
       endif
+      ifneq ($(strip $(LOCAL_O3_OPTIMIZATIONS_MODE)),off)
+        ifdef EXTRA_SABERMOD_GCC_O3_CFLAGS
+          LOCAL_CFLAGS += $(EXTRA_SABERMOD_GCC_O3_CFLAGS)
+        endif
+      endif
     endif
   endif
 endif
@@ -35,6 +40,11 @@ ifdef EXTRA_SABERMOD_CLANG_CFLAGS
       else
         LOCAL_CFLAGS := $(EXTRA_SABERMOD_CLANG_CFLAGS)
       endif
+      ifneq ($(strip $(LOCAL_O3_OPTIMIZATIONS_MODE)),off)
+        ifdef EXTRA_SABERMOD_CLANG_O3_CFLAGS
+          LOCAL_CFLAGS += $(EXTRA_SABERMOD_CLANG_O3_CFLAGS)
+        endif
+      endif
     endif
   endif
 endif
@@ -45,6 +55,9 @@ ifeq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
       LOCAL_CFLAGS += $(EXTRA_SABERMOD_HOST_GCC_CFLAGS)
     else
       LOCAL_CFLAGS := $(EXTRA_SABERMOD_HOST_GCC_CFLAGS)
+    endif
+    ifeq ($(strip $(LOCAL_O3_OPTIMIZATIONS_MODE)),on)
+      LOCAL_CFLAGS += $(EXTRA_SABERMOD_HOST_GCC_O3_CFLAGS)
     endif
   endif
 endif
