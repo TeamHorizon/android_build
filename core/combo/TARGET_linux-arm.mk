@@ -35,10 +35,14 @@ TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT := armv5te
 endif
 
 # Decouple android compiler version from kernel compiler version
-ifneq ($(strip $(USE_LEGACY_NDK),true)
-$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := 4.9
-else
+ifeq ($(strip $(TARGET_SM_AND)),)
+ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
 $(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := 4.8
+else
+$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
+endif
+else
+$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(TARGET_SM_AND)
 endif
 
 # Decouple kernel compiler version from android compiler version
@@ -49,11 +53,10 @@ $(combo_2nd_arch_prefix)TARGET_KERNEL_GCC_VERSION := $(TARGET_SM_KERNEL)
 endif
 
 # Allow overriding of NDK library selection
-ifeq ($(strip $(TARGET_NDK_VERSION)),)
-ifeq ($(strip $(TARGET_SM_AND)),)
-$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.8
+ifneq ($(strip $(USE_LEGACY_NDK)),true)
+$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.9
 else
-$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := $(TARGET_SM_AND)
+$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.8
 endif
 else
 $(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := $(TARGET_NDK_VERSION)
@@ -162,11 +165,10 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_LDFLAGS += \
 			-Wl,--icf=safe \
 			$(arch_variant_ldflags)
 
-# If -O3 optimizations is turned on but disabled for thumb, set a arm mode for globabl flags instead of thumb.
-ifneq ($(strip $(O3_OPTIMIZATIONS))-$(strip $(DISABLE_O3_OPTIMIZATIONS_THUMB)),true-true)
-$(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -mthumb-interwork
+ifneq ($(strip $(ENABLE_SABERMOD_ARM_MODE)),true)
+  $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -mthumb-interwork
 else
-$(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -marm
+  $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -marm
 endif
 
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden

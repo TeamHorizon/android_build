@@ -97,7 +97,7 @@ else
   endif
 endif
 
-include $(BUILD_SYSTEM)/sm.mk
+include $(BUILD_SYSTEM)/sabermod/sm.mk
 
 # The following LOCAL_ variables will be modified in this file.
 # Because the same LOCAL_ variables may be used to define modules for both 1st arch and 2nd arch,
