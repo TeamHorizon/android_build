@@ -71,9 +71,6 @@ ifneq ($(filter arm arm64,$(TARGET_ARCH)),)
 endif
 
 # O3 optimzations
-# To turn on set "O3_OPTIMIZATIONS := true" in device makefile.
-# To disable -O3 optimizations on thumb set "DISABLE_O3_OPTIMIZATIONS_THUMB := true" in device makefile.
-# DISABLE_O3_OPTIMIZATIONS_THUMB should be dependent on "O3_OPTIMIZATIONS := true", otherwise it's useless.
 # LOCAL_O3_OPTIMIZATIONS_MODE is for other flag configurations to use, not for device configurations.
 # Big thanks to Joe Maples for the arm mode to replace thumb mode, and Sebastian Jena for the unveiling the arm thumb mode.
 ifeq ($(strip $(O3_OPTIMIZATIONS)),true)
@@ -113,6 +110,7 @@ ifeq ($(HOST_OS),linux)
   ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
     ifneq ($(strip $(LOCAL_CLANG)),true)
       ifeq ($(strip $(LOCAL_O3_OPTIMIZATIONS_MODE)),on)
+
         # If it gets this far enable graphite by default from here on out.
         ifneq (1,$(words $(filter $(LOCAL_DISABLE_GRAPHITE),$(LOCAL_MODULE))))
           ifdef LOCAL_CFLAGS
