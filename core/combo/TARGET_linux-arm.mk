@@ -163,8 +163,6 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_LDFLAGS += \
 
 ifneq ($(strip $(ENABLE_SABERMOD_ARM_MODE)),true)
   $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -mthumb-interwork
-else
-  $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -marm
 endif
 
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
