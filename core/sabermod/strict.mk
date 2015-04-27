@@ -46,18 +46,16 @@ ifeq ($(strip $(ENABLE_STRICT_ALIASING)),true)
 endif
 
 
-ifneq ($(filter -fstrict-aliasing,$(LOCAL_CFLAGS)),)
-  ifneq ($(strip $(ENABLE_STRICT_ALIASING)),true)
-    LOCAL_CFLAGS += -fno-strict-aliasing
+ifneq ($(strip $(ENABLE_STRICT_ALIASING)),true)
+  LOCAL_CFLAGS += -fno-strict-aliasing
+else
+  ifneq ($(strip $(LOCAL_CLANG)),true)
+    LOCAL_CFLAGS += -Wstrict-aliasing=3 -Werror=strict-aliasing
   else
-    ifneq ($(strip $(LOCAL_CLANG)),true)
-      LOCAL_CFLAGS += -Wstrict-aliasing=3 -Werror=strict-aliasing
-    else
-      LOCAL_CFLAGS += -Wstrict-aliasing=2 -Werror=strict-aliasing
-    endif
-    ifeq (1,$(words $(filter $(LOCAL_DISABLE_STRICT_ALIASING),$(LOCAL_MODULE))))
-      LOCAL_CFLAGS += -fno-strict-aliasing
-    endif
+    LOCAL_CFLAGS += -Wstrict-aliasing=2 -Werror=strict-aliasing
+  endif
+  ifeq (1,$(words $(filter $(LOCAL_DISABLE_STRICT_ALIASING),$(LOCAL_MODULE))))
+    LOCAL_CFLAGS += -fno-strict-aliasing
   endif
 endif
 
