@@ -37,9 +37,6 @@ ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
     else
       LOCAL_CFLAGS := $(EXTRA_SABERMOD_CLANG_CFLAGS)
     endif
-    ifneq ($(strip $(LOCAL_O3_OPTIMIZATIONS_MODE)),off)
-      LOCAL_CFLAGS += $(EXTRA_SABERMOD_CLANG_O3_CFLAGS)
-    endif
   endif
 endif
 
