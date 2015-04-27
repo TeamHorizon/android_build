@@ -46,9 +46,6 @@ ifeq ($(strip $(TARGET_ARCH)),arm)
               LOCAL_CFLAGS := -mthumb-interwork
             endif
           endif
-          ifeq ($(strip $(LOCAL_CLANG)),true)
-            LOCAL_CLANG := false
-          endif
         else
 
           # Set to arm mode
@@ -58,9 +55,9 @@ ifeq ($(strip $(TARGET_ARCH)),arm)
           else
             LOCAL_CFLAGS := -marm
           endif
-          ifeq ($(strip $(LOCAL_CLANG)),true)
+        endif
+        ifeq ($(strip $(LOCAL_CLANG)),true)
             LOCAL_CLANG := false
-          endif
         endif
       else
 
@@ -90,6 +87,7 @@ ifeq ($(strip $(TARGET_ARCH)),arm)
   # This is needed for the DISABLE_O3_OPTIMIZATIONS_THUMB function to work on arm devices.
   ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
     ifndef LOCAL_ARM_MODE
+
       # Still set the default LOCAL_ARM_MODE to thumb in case ENABLE_SABERMOD_ARM_MODE is not set.
       LOCAL_ARM_MODE := thumb
     endif
@@ -109,16 +107,13 @@ ifeq ($(strip $(TARGET_ARCH)),arm64)
         ifneq ($(filter arm arm64 thumb,$(LOCAL_ARM_MODE)),)
           LOCAL_TMP_ARM_MODE := $(filter arm arm64 thumb,$(LOCAL_ARM_MODE))
           LOCAL_ARM_MODE := $(LOCAL_TMP_ARM_MODE)
-          ifeq ($(strip $(LOCAL_CLANG)),true)
-            LOCAL_CLANG := false
-          endif
         else
 
           # Set to arm64 mode
           LOCAL_ARM_MODE := arm64
-          ifeq ($(strip $(LOCAL_CLANG)),true)
-            LOCAL_CLANG := false
-          endif
+        endif
+        ifeq ($(strip $(LOCAL_CLANG)),true)
+          LOCAL_CLANG := false
         endif
       endif
     endif
@@ -206,7 +201,7 @@ endif
 # This causes warnings and should be dealt with, by turning strict-aliasing off to fix the warnings,
 # until AOSP gets around to fixing the warnings locally in the code.
 
-# Warnings and errors are turned on by default if strict-aliasing is set in LOCAL_CFLAGS.
+# Warnings and errors are turned on by default if strict-aliasing is set in LOCAL_CFLAGS.  Also check for arm mode strict-aliasing.
 # GCC can handle a warning level of 3 and clang a level of 2.
 
 ifneq ($(filter -fstrict-aliasing,$(LOCAL_CFLAGS)),)
@@ -216,6 +211,29 @@ ifneq ($(filter -fstrict-aliasing,$(LOCAL_CFLAGS)),)
     LOCAL_CFLAGS += -Wstrict-aliasing=2 -Werror=strict-aliasing
   endif
 endif
+
+ifeq ($(strip $(LOCAL_ARM_MODE),arm)
+arm_objects_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)$(my_prefix)$(arm_objects_mode)_CFLAGS)
+  ifneq ($(strip $(LOCAL_CLANG)),true)
+    ifneq ($(filter -fstrict-aliasing,$(arm_objects_cflags)),)
+      ifdef LOCAL_CFLAGS
+        LOCAL_CFLAGS += -Wstrict-aliasing=3 -Werror=strict-aliasing
+      else
+        LOCAL_CFLAGS := -Wstrict-aliasing=3 -Werror=strict-aliasing
+      endif
+    endif
+  else
+    arm_objects_cflags := $(call $(LOCAL_2ND_ARCH_VAR_PREFIX)convert-to-$(my_host)clang-flags,$(arm_objects_cflags))
+    ifneq ($(filter -fstrict-aliasing,$(arm_objects_cflags)),)
+      ifdef LOCAL_CFLAGS
+        LOCAL_CFLAGS += -Wstrict-aliasing=2 -Werror=strict-aliasing
+      else
+        LOCAL_CFLAGS := -Wstrict-aliasing=2 -Werror=strict-aliasing
+      endif
+    endif
+  endif
+endif
+
 ifeq (1,$(words $(filter $(LOCAL_DISABLE_STRICT_ALIASING),$(LOCAL_MODULE))))
   LOCAL_CFLAGS += -fno-strict-aliasing
 endif
