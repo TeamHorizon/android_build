@@ -98,8 +98,21 @@ $(combo_2nd_arch_prefix)TARGET_STRIP := $($(combo_2nd_arch_prefix)TARGET_AND_TOO
 
 $(combo_2nd_arch_prefix)TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
-$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS := -marm -O2 -fomit-frame-pointer -fstrict-aliasing -funswitch-loops
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := -marm -Os -fomit-frame-pointer -fno-strict-aliasing
+# Modules can choose to compile some source as arm.
+$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O2 \
+			-marm \
+                        -fomit-frame-pointer \
+                        -funswitch-loops
+
+ifneq ($(strip $(ENABLE_STRICT_ALIASING)),false)
+  $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += -fstrict-aliasing
+endif
+
+# Modules can choose to compile some source as thumb.
+$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -marm \
+                        -Os \
+                        -fomit-frame-pointer \
+                        -fno-strict-aliasing
 
 # Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
 # or in your environment to force a full arm build, even for
