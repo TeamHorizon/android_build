@@ -99,15 +99,17 @@ $(combo_2nd_arch_prefix)TARGET_STRIP := $($(combo_2nd_arch_prefix)TARGET_AND_TOO
 $(combo_2nd_arch_prefix)TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
 # Modules can choose to compile some source as arm.
-$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O2 \
-                        -fomit-frame-pointer
+$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS := -fomit-frame-pointer
 
+ifneq ($(strip $(O3_OPTIMIZATIONS)),true)
+  $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += -O2 -g
+endif
 ifneq ($(strip $(ENABLE_STRICT_ALIASING)),false)
   $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += -fstrict-aliasing
 endif
 
 # Modules can choose to compile some source as thumb.
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -mtumb \
+$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -mthumb \
                         -Os \
                         -fomit-frame-pointer \
                         -fno-strict-aliasing
@@ -178,6 +180,16 @@ endif
 
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
 $(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS := -DNDEBUG -Wstrict-aliasing=2 -fgcse-after-reload -frerun-cse-after-loop -frename-registers
+
+# More flags/options can be added here
+$(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS := \
+			-DNDEBUG \
+			-fgcse-after-reload \
+			-frename-registers
+
+ifneq ($(strip $(O3_OPTIMIZATIONS)),true)
+  TARGET_RELEASE_CFLAGS += -O2 -g
+endif
 
 libc_root := bionic/libc
 libm_root := bionic/libm

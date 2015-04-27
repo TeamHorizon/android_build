@@ -143,11 +143,12 @@ TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
 # More flags/options can be added here
 TARGET_RELEASE_CFLAGS := \
 			-DNDEBUG \
-			-O2 \
-			-Wstrict-aliasing=2 \
 			-fgcse-after-reload \
-			-frerun-cse-after-loop \
 			-frename-registers
+
+ifneq ($(strip $(O3_OPTIMIZATIONS)),true)
+  TARGET_RELEASE_CFLAGS += -O2 -g -Wstrict-aliasing=2 
+endif
 
 libc_root := bionic/libc
 libm_root := bionic/libm
