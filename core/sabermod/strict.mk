@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-  # BUGFIX for AOSP
-  # Turn all strict-aliasing warnings into errors.
-  # strict-aliasing has a long well known history of breaking code when allowed to pass with warnings.
-  # AOSP has blindly turned on strict-aliasing in various places locally throughout the source.
-  # This causes warnings and should be dealt with, by turning strict-aliasing off to fix the warnings,
-  # until AOSP gets around to fixing the warnings locally in the code.
+# BUGFIX for AOSP
+# Turn all strict-aliasing warnings into errors.
+# strict-aliasing has a long well known history of breaking code when allowed to pass with warnings.
+# AOSP has blindly turned on strict-aliasing in various places locally throughout the source.
+# This causes warnings and should be dealt with, by turning strict-aliasing off to fix the warnings,
+# until AOSP gets around to fixing the warnings locally in the code.
 
-  # Warnings and errors are turned on by default if strict-aliasing is set in LOCAL_CFLAGS.  Also check for arm mode strict-aliasing.
-  # GCC can handle a warning level of 3 and clang a level of 2.
+# Warnings and errors are turned on by default if strict-aliasing is set in LOCAL_CFLAGS.  Also check for arm mode strict-aliasing.
+# GCC can handle a warning level of 3 and clang a level of 2.
 ifeq ($(strip $(ENABLE_STRICT_ALIASING)),true)
   ifeq ($(strip $(LOCAL_ARM_MODE),arm)
   arm_objects_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)$(my_prefix)$(arm_objects_mode)_CFLAGS)

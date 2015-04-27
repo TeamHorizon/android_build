@@ -78,16 +78,15 @@ $(info   TARGET_CPU_VARIANT=$(TARGET_CPU_VARIANT))
 ifeq ($(ELECTRIFY),true)
 $(info   ELECTRIFIED=yes)
 endif
-ifneq ($(filter (SaberMod%), $(shell $(TARGET_CC) --version)),)
-$(info   GRAPHITE=yes)
-endif
-$(info   TARGET_TOOLCHAIN=$(TARGET_GCC_VERSION))
-$(info   TARGET_NDK_GCC_VERSION=$(TARGET_NDK_GCC_VERSION))
+$(info   TARGET_ROM_TOOLCHAIN=$(TARGET_AND_GCC_VERSION))
+$(info   TARGET_ROM_TOOLCHAIN=$(TARGET_KERNEL_GCC_VERSION))
+$(info   TARGET_NDK_TOOLCHAIN=$(TARGET_NDK_GCC_VERSION))
 $(info   HOST_ARCH=$(HOST_ARCH))
 $(info   HOST_OS=$(HOST_OS))
 $(info   HOST_OS_EXTRA=$(HOST_OS_EXTRA))
 $(info   HOST_BUILD_TYPE=$(HOST_BUILD_TYPE))
 $(info   BUILD_ID=$(BUILD_ID))
 $(info   OUT_DIR=$(OUT_DIR))
-$(info ============================================)
+$(info =====================================================================)
+include $(BUILD_SYSTEM)/sabermod/dumpvar.mk
 endif
