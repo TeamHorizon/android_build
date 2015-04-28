@@ -15,16 +15,22 @@
 # Extra SaberMod C flags for gcc and clang
 # Seperated by arch, clang and host
 
-ifdef EXTRA_SABERMOD_GCC_CFLAGS
-  ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
-    ifneq ($(strip $(LOCAL_CLANG)),true)
-      ifdef LOCAL_CFLAGS
-        LOCAL_CFLAGS += $(EXTRA_SABERMOD_GCC_CFLAGS)
-      else
-        LOCAL_CFLAGS := $(EXTRA_SABERMOD_GCC_CFLAGS)
+ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
+  ifneq ($(strip $(LOCAL_CLANG)),true)
+    ifdef EXTRA_SABERMOD_GCC_VECTORIZE_CFLAGS
+      ifneq (1,$(words $(filter $(LOCAL_DISABLE_SABERMOD_GCC_VECTORIZE_CFLAGS),$(LOCAL_MODULE))))
+        ifdef LOCAL_CFLAGS
+          LOCAL_CFLAGS += $(EXTRA_SABERMOD_GCC_VECTORIZE_CFLAGS)
+        else
+          LOCAL_CFLAGS := $(EXTRA_SABERMOD_GCC_VECTORIZE_CFLAGS)
+        endif
       endif
-      ifneq ($(strip $(LOCAL_O3_OPTIMIZATIONS_MODE)),off)
+    endif
+    ifneq ($(strip $(LOCAL_O3_OPTIMIZATIONS_MODE)),off)
+      ifdef LOCAL_CFLAGS
         LOCAL_CFLAGS += $(EXTRA_SABERMOD_GCC_O3_CFLAGS)
+      else
+        LOCAL_CFLAGS := $(EXTRA_SABERMOD_GCC_O3_CFLAGS)
       endif
     endif
   endif
@@ -32,10 +38,12 @@ endif
 
 ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
   ifeq ($(strip $(LOCAL_CLANG)),true)
-    ifdef LOCAL_CFLAGS
-      LOCAL_CFLAGS += $(EXTRA_SABERMOD_CLANG_CFLAGS)
-    else
-      LOCAL_CFLAGS := $(EXTRA_SABERMOD_CLANG_CFLAGS)
+    ifneq (1,$(words $(filter $(LOCAL_DISABLE_SABERMOD_CLANG_VECTORIZE_CFLAGS),$(LOCAL_MODULE))))
+      ifdef LOCAL_CFLAGS
+        LOCAL_CFLAGS += $(LOCAL_SABERMOD_CLANG_VECTORIZE_CFLAGS)
+      else
+        LOCAL_CFLAGS := $(LOCAL_SABERMOD_CLANG_VECTORIZE_CFLAGS)
+      endif
     endif
   endif
 endif
