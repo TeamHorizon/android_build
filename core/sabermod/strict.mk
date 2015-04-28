@@ -22,7 +22,7 @@
 # Warnings and errors are turned on by default if strict-aliasing is set in LOCAL_CFLAGS.  Also check for arm mode strict-aliasing.
 # GCC can handle a warning level of 3 and clang a level of 2.
 ifeq ($(strip $(ENABLE_STRICT_ALIASING)),true)
-  ifeq ($(strip $(LOCAL_ARM_MODE),arm)
+  ifeq ($(strip $(LOCAL_ARM_MODE)),arm)
   arm_objects_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)$(my_prefix)$(arm_objects_mode)_CFLAGS)
     ifneq ($(strip $(LOCAL_CLANG)),true)
       ifneq ($(filter -fstrict-aliasing,$(arm_objects_cflags)),)
