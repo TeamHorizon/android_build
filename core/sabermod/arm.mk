@@ -21,6 +21,7 @@
 # Clang is very limited with options, so kill it with fire.
 # The LOCAL_ARM_COMPILERS_WHITELIST and LOCAL_ARM64_COMPILERS_WHITELIST will disable SaberMod ARM Mode for specified modules.
 # All libLLVM's gets added to the WhiteList automatically.
+# Big thanks to Joe Maples for the arm mode to replace thumb mode, and Sebastian Jena for the unveiling the arm thumb mode.
 
 # ARM
 ifeq ($(strip $(TARGET_ARCH)),arm)

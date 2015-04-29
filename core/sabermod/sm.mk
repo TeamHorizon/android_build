@@ -16,32 +16,7 @@
 
 include $(BUILD_SYSTEM)/sabermod/arm.mk
 
-# O3 optimzations
-# LOCAL_O3_OPTIMIZATIONS_MODE is for other flag configurations to use, not for device configurations.
-# Big thanks to Joe Maples for the arm mode to replace thumb mode, and Sebastian Jena for the unveiling the arm thumb mode.
-ifeq ($(strip $(O3_OPTIMIZATIONS)),true)
-  ifneq ($(strip $(LOCAL_ARM_MODE))-$(strip $(DISABLE_O3_OPTIMIZATIONS_THUMB)),thumb-true)
-    ifneq (1,$(words $(filter $(LOCAL_DISABLE_O3),$(LOCAL_MODULE))))
-      ifdef LOCAL_CFLAGS
-        LOCAL_CFLAGS += $(O3_FLAGS) -g
-      else
-        LOCAL_CFLAGS := $(O3_FLAGS) -g
-      endif
-      LOCAL_O3_OPTIMIZATIONS_MODE := on
-    else
-      LOCAL_O3_OPTIMIZATIONS_MODE := off
-      ifdef LOCAL_CFLAGS
-        LOCAL_CFLAGS += -O2 -g
-      else
-        LOCAL_CFLAGS := -O2 -g
-      endif
-    endif
-  else
-    LOCAL_O3_OPTIMIZATIONS_MODE := off
-  endif
-else
-  LOCAL_O3_OPTIMIZATIONS_MODE := off
-endif
+include $(BUILD_SYSTEM)/sabermod/O3.mk
 
 # Extra sabermod variables
 include $(BUILD_SYSTEM)/sabermod/extra.mk
