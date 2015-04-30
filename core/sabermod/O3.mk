@@ -27,20 +27,14 @@ ifeq ($(strip $(O3_OPTIMIZATIONS)),true)
       endif
       LOCAL_O3_OPTIMIZATIONS_MODE := on
     else
-      ifneq (1,$(words $(filter $(OPTIMIZE_FOR_SIZE),$(LOCAL_MODULE))))
+      ifneq (1,$(words $(filter $(NO_OPTIMIZATIONS),$(LOCAL_MODULE))))
         LOCAL_O3_OPTIMIZATIONS_MODE := off
         ifdef LOCAL_CFLAGS
           LOCAL_CFLAGS += -O2 -g
         else
           LOCAL_CFLAGS := -O2 -g
         endif
-      else
-        ifdef LOCAL_CFLAGS
-          LOCAL_CFLAGS += -Os
-        else
-          LOCAL_CFLAGS := -Os
-        endif
-     endif
+      endif
     endif
   else
     LOCAL_O3_OPTIMIZATIONS_MODE := off
