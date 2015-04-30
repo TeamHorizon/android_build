@@ -1,4 +1,5 @@
-# Copyright (C) 2015 The SaberMod Project
+#
+# Copyright (C) 2015 Team Horizon & SaberMod
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,15 +12,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+ifeq ($(strip $(ELECTRIFY)),true)
+  ########################
+  ##       DEFINE       ##
+  ##  CUSTOM TOOLCHAINS ##
+  ##        HERE        ##
+  ########################
+  # ROM
+  TARGET_SM_AND := 4.8
+  # Kernel
+  TARGET_SM_KERNEL := 4.9
 
-$(info =====================================================================)
-ifdef SM_AND_NAME
-$(info   TARGET_SABERMOD_ANDROID_GCC_VERSION=$(SM_AND_NAME))
-endif
-ifdef SM_KERNEL_NAME
-$(info   TARGET_SABERMOD_KERNEL_GCC_VERSION=$(SM_KERNEL_NAME))
-endif
-ifdef GCC_OPTIMIZATION_LEVELS
-$(info   OPTIMIZATION_OPTIONS=$(GCC_OPTIMIZATION_LEVELS))
-endif
-$(info =====================================================================)
+  # Define Optimizations for ELECTRIFY to use
+  export O3_OPTIMIZATIONS := true
+  export ENABLE_SABERMOD_ARM_MODE:= true
+  export ENABLE_PTHREAD := true
+  export ENABLE_GRAPHITE := true
+  export ENABLE_STRICT_ALIASING := true
+endif 

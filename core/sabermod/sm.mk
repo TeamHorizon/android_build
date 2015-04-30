@@ -33,6 +33,7 @@ endif
 # Do not use graphite on host modules or the clang compiler.
 # Also do not bother using on darwin.
 ifeq ($(HOST_OS),linux)
+ifeq ($(strip $(ENABLE_GRAPHITE)),true)
   ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
     ifneq ($(strip $(LOCAL_CLANG)),true)
       ifeq ($(strip $(LOCAL_O3_OPTIMIZATIONS_MODE)),on)
@@ -53,6 +54,7 @@ ifeq ($(HOST_OS),linux)
       endif
     endif
   endif
+endif
 endif
 
 # General flags for gcc 4.9 to allow compilation to complete.

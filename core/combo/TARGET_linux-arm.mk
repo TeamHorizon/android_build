@@ -58,9 +58,6 @@ $(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.9
 else
 $(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.8
 endif
-else
-$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := $(TARGET_NDK_VERSION)
-endif
 
 # Allow a second arch combo to override the ROM toolchain version
 ifdef 2ND_TARGET_SM_AND_VERSION
@@ -99,17 +96,18 @@ $(combo_2nd_arch_prefix)TARGET_STRIP := $($(combo_2nd_arch_prefix)TARGET_AND_TOO
 $(combo_2nd_arch_prefix)TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
 # Modules can choose to compile some source as arm.
-$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS := -fomit-frame-pointer
+$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS := -marm \
+				-fomit-frame-pointer
 
 ifneq ($(strip $(O3_OPTIMIZATIONS)),true)
-  $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += -O2 -g
+  $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += -O2 
 endif
 ifneq ($(strip $(ENABLE_STRICT_ALIASING)),false)
   $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += -fstrict-aliasing
 endif
 
-# Modules can choose to compile some source as thumb.
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -mthumb \
+# Modules can choose to compile some source as thumb, but arm is better, so lets use that.
+$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -marm \
                         -Os \
                         -fomit-frame-pointer \
                         -fno-strict-aliasing
@@ -188,7 +186,7 @@ $(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS := \
 			-frename-registers
 
 ifneq ($(strip $(O3_OPTIMIZATIONS)),true)
-  TARGET_RELEASE_CFLAGS += -O2 -g
+  TARGET_RELEASE_CFLAGS += -O2
 endif
 
 libc_root := bionic/libc

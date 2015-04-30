@@ -79,7 +79,7 @@ ifeq ($(ELECTRIFY),true)
 $(info   ELECTRIFIED=yes)
 endif
 $(info   TARGET_ROM_TOOLCHAIN=$(TARGET_AND_GCC_VERSION))
-$(info   TARGET_ROM_TOOLCHAIN=$(TARGET_KERNEL_GCC_VERSION))
+$(info   TARGET_KERNEL_TOOLCHAIN=$(TARGET_KERNEL_GCC_VERSION))
 $(info   TARGET_NDK_TOOLCHAIN=$(TARGET_NDK_GCC_VERSION))
 $(info   HOST_ARCH=$(HOST_ARCH))
 $(info   HOST_OS=$(HOST_OS))
@@ -87,6 +87,5 @@ $(info   HOST_OS_EXTRA=$(HOST_OS_EXTRA))
 $(info   HOST_BUILD_TYPE=$(HOST_BUILD_TYPE))
 $(info   BUILD_ID=$(BUILD_ID))
 $(info   OUT_DIR=$(OUT_DIR))
-$(info =====================================================================)
-include $(BUILD_SYSTEM)/sabermod/dumpvar.mk
+$(info ============================================)
 endif
