@@ -21,7 +21,9 @@ include $(BUILD_SYSTEM)/sabermod/arm.mk
 include $(BUILD_SYSTEM)/sabermod/werror.mk
 
 # Tune based on CPU
-include $(BUILD_SYSTEM)/sabermod/tune.mk
+ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
+  include $(BUILD_SYSTEM)/sabermod/tune.mk
+endif
 
 # O3 Optimizations
 include $(BUILD_SYSTEM)/sabermod/O3.mk
