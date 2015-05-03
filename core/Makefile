@@ -1654,7 +1654,7 @@ endif
 ifeq ($(USE_PREBUILT_CHROMIUM),1)
 ifneq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)
 	@echo -e ${CL_GRN}"Running Chromium prebuilt setup script..."${CL_RST}
-	$(hide) . $(TOPDIR)vendor/cm/utils/chromium_prebuilt.sh $(TOP)
+	$(hide) . $(TOPDIR)vendor/xenonhd/tools/chromium_prebuilt.sh $(TOP)
 endif
 endif
 
