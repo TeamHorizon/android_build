@@ -14,9 +14,16 @@
 # limitations under the License.
 ##########################################################################
 
+# SaberMod Arm Mode 
 include $(BUILD_SYSTEM)/sabermod/arm.mk
+
+# Disable -Werror
 include $(BUILD_SYSTEM)/sabermod/werror.mk
 
+# Tune based on CPU
+include $(BUILD_SYSTEM)/sabermod/tune.mk
+
+# O3 Optimizations
 include $(BUILD_SYSTEM)/sabermod/O3.mk
 
 # Extra sabermod variables
@@ -73,6 +80,7 @@ ifdef MAYBE_UNINITIALIZED
   endif
 endif
 
+# Disable Strict because it is not currently in use
 #include $(BUILD_SYSTEM)/sabermod/strict.mk
 
 #end SaberMod
