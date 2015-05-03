@@ -97,10 +97,8 @@ else
   endif
 endif
 
-ifeq ($(ELECTRIFY),true)
-	# Include custom gcc flags.  Seperate them so they can be easily managed.
-	include $(BUILD_SYSTEM)/graphite.mk
-	include $(BUILD_SYSTEM)/strict.mk
+ifeq ($(strip $(ELECTRIFY)),true)
+  include $(BUILD_SYSTEM)/sabermod/sm.mk
 endif
 
 # The following LOCAL_ variables will be modified in this file.

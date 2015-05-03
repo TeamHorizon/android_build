@@ -34,17 +34,39 @@ ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT)),)
 TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT := armv5te
 endif
 
-# Decouple NDK library selection with platform compiler version
-ifeq ($(ELECTRIFY),true)
+# Decouple android compiler version from kernel compiler version
+ifeq ($(strip $(TARGET_SM_AND)),)
+ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
+$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := 4.8
+else
+$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
+endif
+else
+$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(TARGET_SM_AND)
+endif
+
+# Decouple kernel compiler version from android compiler version
+ifeq ($(strip $(TARGET_SM_KERNEL)),)
+$(combo_2nd_arch_prefix)TARGET_KERNEL_GCC_VERSION := $($(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION)
+else
+$(combo_2nd_arch_prefix)TARGET_KERNEL_GCC_VERSION := $(TARGET_SM_KERNEL)
+endif
+
+# Allow overriding of NDK library selection
+ifneq ($(strip $(USE_LEGACY_NDK)),true)
 $(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.9
 else
 $(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 4.8
 endif
 
-ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
-$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 4.8
-else
-$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
+# Allow a second arch combo to override the ROM toolchain version
+ifdef 2ND_TARGET_SM_AND_VERSION
+$(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION := $(2ND_TARGET_SM_AND)
+endif
+
+# Allow a second arch combo to override the NDK library selection
+ifdef 2ND_TARGET_NDK_VERSION
+$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := $(2ND_TARGET_NDK_VERSION)
 endif
 
 TARGET_ARCH_SPECIFIC_MAKEFILE := $(BUILD_COMBOS)/arch/$(TARGET_$(combo_2nd_arch_prefix)ARCH)/$(TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT).mk
@@ -55,34 +77,40 @@ endif
 include $(TARGET_ARCH_SPECIFIC_MAKEFILE)
 include $(BUILD_SYSTEM)/combo/fdo.mk
 
-# You can set TARGET_TOOLS_PREFIX to get gcc from somewhere else
-ifeq ($(strip $($(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX)),)
-$(combo_2nd_arch_prefix)TARGET_TOOLCHAIN_ROOT := prebuilts/gcc/$(HOST_PREBUILT_TAG)/arm/arm-linux-androideabi-$($(combo_2nd_arch_prefix)TARGET_GCC_VERSION)
-$(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX := $($(combo_2nd_arch_prefix)TARGET_TOOLCHAIN_ROOT)/bin/arm-linux-androideabi-
-endif
+# You can set TARGET_AND_TOOLS_PREFIX to get gcc from somewhere else
+$(combo_2nd_arch_prefix)TARGET_AND_TOOLCHAIN_ROOT := prebuilts/gcc/$(HOST_PREBUILT_TAG)/arm/arm-linux-androideabi-$($(combo_2nd_arch_prefix)TARGET_AND_GCC_VERSION)
+$(combo_2nd_arch_prefix)TARGET_AND_TOOLS_PREFIX := $($(combo_2nd_arch_prefix)TARGET_AND_TOOLCHAIN_ROOT)/bin/arm-linux-androideabi-
 
-$(combo_2nd_arch_prefix)TARGET_CC := $($(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX)gcc$(HOST_EXECUTABLE_SUFFIX)
-$(combo_2nd_arch_prefix)TARGET_CXX := $($(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX)g++$(HOST_EXECUTABLE_SUFFIX)
-$(combo_2nd_arch_prefix)TARGET_AR := $($(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX)ar$(HOST_EXECUTABLE_SUFFIX)
-$(combo_2nd_arch_prefix)TARGET_OBJCOPY := $($(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX)objcopy$(HOST_EXECUTABLE_SUFFIX)
-$(combo_2nd_arch_prefix)TARGET_LD := $($(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX)ld$(HOST_EXECUTABLE_SUFFIX)
-$(combo_2nd_arch_prefix)TARGET_READELF := $($(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX)readelf$(HOST_EXECUTABLE_SUFFIX)
-$(combo_2nd_arch_prefix)TARGET_STRIP := $($(combo_2nd_arch_prefix)TARGET_TOOLS_PREFIX)strip$(HOST_EXECUTABLE_SUFFIX)
+# You can set TARGET_KERNEL_TOOLS_PREFIX to get gcc from somewhere else
+TARGET_KERNEL_TOOLS_PREFIX := arm-eabi-
+
+# Android compiler binaries
+$(combo_2nd_arch_prefix)TARGET_CC := $($(combo_2nd_arch_prefix)TARGET_AND_TOOLS_PREFIX)gcc$(HOST_EXECUTABLE_SUFFIX)
+$(combo_2nd_arch_prefix)TARGET_CXX := $($(combo_2nd_arch_prefix)TARGET_AND_TOOLS_PREFIX)g++$(HOST_EXECUTABLE_SUFFIX)
+$(combo_2nd_arch_prefix)TARGET_AR := $($(combo_2nd_arch_prefix)TARGET_AND_TOOLS_PREFIX)ar$(HOST_EXECUTABLE_SUFFIX)
+$(combo_2nd_arch_prefix)TARGET_OBJCOPY := $($(combo_2nd_arch_prefix)TARGET_AND_TOOLS_PREFIX)objcopy$(HOST_EXECUTABLE_SUFFIX)
+$(combo_2nd_arch_prefix)TARGET_LD := $($(combo_2nd_arch_prefix)TARGET_AND_TOOLS_PREFIX)ld$(HOST_EXECUTABLE_SUFFIX)
+$(combo_2nd_arch_prefix)TARGET_READELF := $($(combo_2nd_arch_prefix)TARGET_AND_TOOLS_PREFIX)readelf$(HOST_EXECUTABLE_SUFFIX)
+$(combo_2nd_arch_prefix)TARGET_STRIP := $($(combo_2nd_arch_prefix)TARGET_AND_TOOLS_PREFIX)strip$(HOST_EXECUTABLE_SUFFIX)
 
 $(combo_2nd_arch_prefix)TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
-ifeq ($(ELECTRIFY),true)
-	# Include Graphite Loop Optimizations for ELECTRIFY
-	include $(BUILD_SYSTEM)/graphite.mk
+# Modules can choose to compile some source as arm.
+$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS := -marm \
+				-fomit-frame-pointer
+
+ifneq ($(strip $(O3_OPTIMIZATIONS)),true)
+  $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += -O2 
+endif
+ifneq ($(strip $(ENABLE_STRICT_ALIASING)),false)
+  $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += -fstrict-aliasing
 endif
 
-ifeq ($(ELECTRIFY),true)
-$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS := -O3 -DNDEBUG -pipe -fomit-frame-pointer -funswitch-loops -fno-tree-vectorize -fno-inline-functions -fivopts -ffunction-sections -fdata-sections -frename-registers -fomit-frame-pointer -ftracer -Wno-unused-parameter -Wno-unused-but-set-variable -Wno-maybe-uninitialized $(call cc-option,$(-fira-loop-pressure,-fforce-addr,-funsafe-loop-optimizations,-funroll-loops,-ftree-loop-distribution,-fsection-anchors,-ftree-loop-im,-ftree-loop-ivcanon,-ffunction-sections,-fgcse-after-reload,-fgcse-las,-fgcse-sm,-fweb,-ffp-contract=fast))
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -mthumb -Os -DNDEBUG -pipe -fomit-frame-pointer -fno-strict-aliasing -fno-tree-vectorize -fno-inline-functions -fno-unswitch-loops -fivopts -ffunction-sections -fdata-sections -ftracer -Wno-unused-parameter -Wno-unused-but-set-variable -Wno-maybe-uninitialized -Wno-clobbered -Wno-strict-overflow $(call cc-option,$(-funsafe-loop-optimizations,-funroll-loops,-ftree-loop-distribution,-fsection-anchors,-ftree-loop-im,-ftree-loop-ivcanon,-ffunction-sections,-frename-registers,-frerun-cse-after-loop,-fgcse-las,-fgcse-sm,-fweb,-ffp-contract=fast))
-else
-$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS := -O2 -fomit-frame-pointer -fstrict-aliasing -funswitch-loops
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing
-endif
+# Modules can choose to compile some source as thumb, but arm is better, so lets use that.
+$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -marm \
+                        -Os \
+                        -fomit-frame-pointer \
+                        -fno-strict-aliasing
 
 # Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
 # or in your environment to force a full arm build, even for
@@ -121,11 +149,9 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
 # "-Wall -Werror" due to a commom idiom "ALOGV(mesg)" where ALOGV is turned
 # into no-op in some builds while mesg is defined earlier. So we explicitly
 # disable "-Wunused-but-set-variable" here.
-ifeq ($(ELECTRIFY),true)
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -fno-builtin-sin \
 						-fno-strict-volatile-bitfields \
 						-fstrict-aliasing
-endif
 
 # This is to avoid the dreaded warning compiler message:
 #   note: the mangling of 'va_list' has changed in GCC 4.4
@@ -146,20 +172,26 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_LDFLAGS += \
 			-Wl,--icf=safe \
 			$(arch_variant_ldflags)
 
-$(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -mthumb-interwork
+ifneq ($(strip $(ENABLE_SABERMOD_ARM_MODE)),true)
+  $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -mthumb-interwork
+endif
 
-ifeq ($(ELECTRIFY),true)
-$(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden -O3 -DNDEBUG -pipe -fivopts -ffunction-sections -fdata-sections -funswitch-loops -fomit-frame-pointer -ftracer -Wno-unused-parameter -Wno-unused-but-set-variable -Wno-maybe-uninitialized $(call cpp-option,$(-fira-loop-pressure,-fforce-addr,-funsafe-loop-optimizations,-funroll-loops,-ftree-loop-distribution,-fsection-anchors,-ftree-loop-im,-ftree-loop-ivcanon,-ffunction-sections,-fgcse-las,-fgcse-sm,-fweb,-ffp-contract=fast))
-$(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS := -O3 -DNDEBUG -pipe -g -frerun-cse-after-loop -frename-registers -fno-strict-aliasing -fivopts -ffunction-sections -fdata-sections -funswitch-loops -fomit-frame-pointer -ftracer -Wno-unused-parameter -Wno-unused-but-set-variable -Wno-maybe-uninitialized $(call cc-option,$(-fira-loop-pressure,-fforce-addr,-funsafe-loop-optimizations,-funroll-loops,-ftree-loop-distribution,-fsection-anchors,-ftree-loop-im,-ftree-loop-ivcanon,-ffunction-sections,-fgcse-after-reload,-fgcse-las,-fgcse-sm,-fweb,-ffp-contract=fast))
-else
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
-$(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS := -DNDEBUG -g -Wstrict-aliasing=2 -fgcse-after-reload -frerun-cse-after-loop -frename-registers
+$(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS := -DNDEBUG -Wstrict-aliasing=2 -fgcse-after-reload -frerun-cse-after-loop -frename-registers
+
+# More flags/options can be added here
+$(combo_2nd_arch_prefix)TARGET_RELEASE_CFLAGS := \
+			-DNDEBUG \
+			-fgcse-after-reload \
+			-frename-registers
+
+ifneq ($(strip $(O3_OPTIMIZATIONS)),true)
+  TARGET_RELEASE_CFLAGS += -O2
 endif
 
 libc_root := bionic/libc
 libm_root := bionic/libm
 libstdc++_root := bionic/libstdc++
-
 
 ## on some hosts, the target cross-compiler is not available so do not run this command
 ifneq ($(wildcard $($(combo_2nd_arch_prefix)TARGET_CC)),)

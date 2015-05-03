@@ -993,6 +993,7 @@ systemimage-squisher: $(INTERNAL_SYSTEMIMAGE_FILES)
 .PHONY: systemimage-squisher
 
 FULL_SYSTEMIMAGE_DEPS := $(INTERNAL_SYSTEMIMAGE_FILES) $(INTERNAL_USERIMAGES_DEPS) systemimage-squisher
+
 # -----------------------------------------------------------------
 # installed file list
 # Depending on anything that $(BUILT_SYSTEMIMAGE) depends on.

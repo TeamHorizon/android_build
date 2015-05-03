@@ -6,9 +6,16 @@ ARCH_ARM_HAVE_VFP               := true
 ARCH_ARM_HAVE_VFP_D32           := true
 ARCH_ARM_HAVE_NEON              := true
 
-ifneq (,$(filter cortex-a15 krait denver,$(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)))
-	# NOTE: krait is not a cortex-a15, we set the variant to cortex-a15 so that
-	#       hardware divide operations are generated.
+CORTEX_A15_TYPE := \
+	cortex-a15 \
+	krait \
+	denver
+
+ifneq (,$(filter $(CORTEX_A15_TYPE),$(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)))
+	# TODO: krait and denver is not a cortex-a15, we set the variant to cortex-a15 so that
+	#       hardware divide operations are generated for arm binaries. This should be removed and a
+	#       krait CPU variant added to GCC. For clang we specify -mcpu for krait in
+	#       core/clang/arm.mk.
 	arch_variant_cflags := -mcpu=cortex-a15
 
 	# Fake an ARM compiler flag as these processors support LPAE which GCC/clang
@@ -31,6 +38,27 @@ endif
 endif
 endif
 
+# arm64 doesn't like cortex-a15 in the kernel
+ifeq (denver,$(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT))
+	# Export cflags and cpu variant to the kernel.
+	export kernel_arch_variant_cflags := -march=armv8-a
+endif
+
 arch_variant_cflags += \
     -mfloat-abi=softfp \
     -mfpu=neon
+
+# For neon vfpv4 type, override -mfpu=neon with -mfpu=neon-vfpv4
+# Have the clang compiler ignore unknow flag option -mfpu=neon-vfpv4
+# Once ignored by clang, clang will default back to -mfpu=neon
+neon_vfpv4_type := \
+	cortex-a15 \
+	krait
+
+ifneq ($(filter $(neon_vfpv4_type),$(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),)
+arch_variant_cflags += \
+    -mfpu=neon-vfpv4
+# Export cflags and cpu variant to the kernel.
+export kernel_arch_variant_cflags := $(arch_variant_cflags)
+endif
+

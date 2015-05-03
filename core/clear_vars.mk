@@ -254,3 +254,5 @@ LOCAL_CLANG_64:=
 # Leave the current makefile to make sure we don't break anything
 # that expects to be able to find the name of the current makefile.
 MAKEFILE_LIST := $(lastword $(MAKEFILE_LIST))
+
+include $(BUILD_SYSTEM)/sabermod/clear_vars.mk

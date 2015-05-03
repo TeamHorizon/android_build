@@ -3,6 +3,9 @@
 # current configuration and platform, which
 # are not specific to what is being built.
 
+# Include ELECTRIFY.mk to define toolchain and optimization variables.
+include $(BUILD_SYSTEM)/sabermod/ELECTRIFY.mk
+
 # Only use ANDROID_BUILD_SHELL to wrap around bash.
 # DO NOT use other shells such as zsh.
 ifdef ANDROID_BUILD_SHELL
