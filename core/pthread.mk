@@ -1,5 +1,4 @@
-#
-# Copyright (C) 2008 The Android Open Source Project
+# Copyright (C) 2015 The SaberMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# BUILD_ID is usually used to specify the branch name
-# (like "MAIN") or a branch name and a release candidate
-# (like "CRB01").  It must be a single word, and is
-# capitalized by convention.
+# Adds PThread flags globally
+ifneq (1,$(words $(filter $(DISABLE_PTHREAD),$(LOCAL_MODULE))))
+  ifdef LOCAL_CFLAGS
+    LOCAL_CFLAGS += -pthread
+  else
+    LOCAL_CFLAGS := -pthread
+  endif
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += -pthread
+  else
+    LOCAL_CPPFLAGS := -pthread
+  endif
+endif
 
-export BUILD_ID=LMY47O
+
+DISABLE_PTHREAD := \
+	libc_netbsd 
 

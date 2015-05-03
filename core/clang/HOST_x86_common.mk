@@ -15,7 +15,8 @@ CLANG_CONFIG_x86_LINUX_HOST_EXTRA_CFLAGS := \
   -no-integrated-as
 
 ifneq ($(strip $($(clang_2nd_arch_prefix)HOST_IS_64_BIT)),)
-ifeq ($(ELECTRIFY),true)
+ifneq ($(USE_LEGACY_GCC),true)
+
 CLANG_CONFIG_x86_LINUX_HOST_EXTRA_CPPFLAGS := \
   --gcc-toolchain=$($(clang_2nd_arch_prefix)HOST_TOOLCHAIN_FOR_CLANG) \
   --sysroot=$($(clang_2nd_arch_prefix)HOST_TOOLCHAIN_FOR_CLANG)/sysroot \
@@ -33,7 +34,7 @@ CLANG_CONFIG_x86_LINUX_HOST_EXTRA_CPPFLAGS := \
   -no-integrated-as
 endif
 
-ifeq ($(ELECTRIFY),true)
+ifneq ($(USE_LEGACY_GCC),true)
 CLANG_CONFIG_x86_LINUX_HOST_EXTRA_LDFLAGS := \
   --gcc-toolchain=$($(clang_2nd_arch_prefix)HOST_TOOLCHAIN_FOR_CLANG) \
   --sysroot=$($(clang_2nd_arch_prefix)HOST_TOOLCHAIN_FOR_CLANG)/sysroot \
@@ -53,7 +54,7 @@ CLANG_CONFIG_x86_LINUX_HOST_EXTRA_LDFLAGS := \
   -no-integrated-as
 endif
 else
-ifeq ($(ELECTRIFY),true)
+ifneq ($(USE_LEGACY_GCC),true)
 CLANG_CONFIG_x86_LINUX_HOST_EXTRA_CPPFLAGS := \
   --gcc-toolchain=$($(clang_2nd_arch_prefix)HOST_TOOLCHAIN_FOR_CLANG) \
   --sysroot=$($(clang_2nd_arch_prefix)HOST_TOOLCHAIN_FOR_CLANG)/sysroot \
@@ -71,7 +72,7 @@ CLANG_CONFIG_x86_LINUX_HOST_EXTRA_CPPFLAGS := \
   -no-integrated-as
 endif
 
-ifeq ($(ELECTRIFY),true)
+ifneq ($(USE_LEGACY_GCC),true)
 CLANG_CONFIG_x86_LINUX_HOST_EXTRA_LDFLAGS := \
   --gcc-toolchain=$($(clang_2nd_arch_prefix)HOST_TOOLCHAIN_FOR_CLANG) \
   --sysroot=$($(clang_2nd_arch_prefix)HOST_TOOLCHAIN_FOR_CLANG)/sysroot \

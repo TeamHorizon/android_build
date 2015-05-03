@@ -1,5 +1,4 @@
-#
-# Copyright (C) 2008 The Android Open Source Project
+# Copyright (C) 2015 The SaberMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# BUILD_ID is usually used to specify the branch name
-# (like "MAIN") or a branch name and a release candidate
-# (like "CRB01").  It must be a single word, and is
-# capitalized by convention.
 
-export BUILD_ID=LMY47O
-
+# Disable Clang for a list of modules toallow compatibility with GCC
+# flags that cause errors with the Clang compiler frontend such as
+# -mcpu=cortex_a15 and graphite optimization flags
+ 
+DISABLE_CLANG := \
+	art \
+        libart \
+        libandroidruntime \
+        libdalvik
+ 
+ifneq (1,$(words $(filter $(DISABLE_CLANG),$(LOCAL_MODULE))))
+ export WITHOUT_CLANG=true
+# export WITHOUT_TARGET_CLANG=true
+# export WITHOUT_HOST_CLANG=true
+# export LOCAL_CLANG=false
+endif

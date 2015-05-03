@@ -1,4 +1,4 @@
-# Copyright (C) 2014 The SaberMod Project
+# Copyright (C) 2014-2015 The SaberMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,63 +12,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-GRAPHITE_FLAGS := $(call cc-option,$(-fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block))
-
-# Only use graphite if using SaberMod toolchain.  Allow any version of SaberMod with the wildcard symbol.
-ifneq ($(filter (SaberMod%), $(shell $(TARGET_CC) --version)),)
-ifdef LOCAL_CFLAGS
-LOCAL_CFLAGS += $(GRAPHITE_FLAGS)
-else
-LOCAL_CFLAGS := $(GRAPHITE_FLAGS)
+# Find OS
+  UNAME := $(shell uname -s)
+ifeq ($(strip $(UNAME)),Linux)
+    # Graphite flags and friends
+    GRAPHITE_FLAGS := \
+      -fgraphite \
+      -fgraphite-identity \
+      -floop-flatten \
+      -floop-parallelize-all \
+      -ftree-loop-linear \
+      -floop-interchange \
+      -floop-strip-mine \
+      -floop-block
 endif
 
-ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += $(GRAPHITE_FLAGS)
-else
-LOCAL_CPPFLAGS := $(GRAPHITE_FLAGS)
-endif
+    # Legacy gcc doesn't understand this flag
+    ifneq ($(strip $(USE_LEGACY_GCC)),true)
+      GRAPHITE_FLAGS += \
+        -Wno-error=maybe-uninitialized
+    endif
 
-ifdef $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS
-$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += $(GRAPHITE_FLAGS)
-else
-$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS := $(GRAPHITE_FLAGS)
-endif
+    # Force disable some modules that are not compatible with graphite flags.
+    # Add more modules if needed for devices in BoardConfig.mk
+    # LOCAL_DISABLE_GRAPHITE +=
+    LOCAL_DISABLE_GRAPHITE := \
+      libunwind \
+      libFFTEm \
+      libicui18n \
+      libskia \
+      libvpx \
+      libmedia_jni \
+      libstagefright_mp3dec \
+      mdnsd \
+      libwebrtc_spl \
+      third_party_WebKit_Source_core_webcore_svg_gyp \
+      libjni_filtershow_filters \
+      libavformat \
+      libavcodec \
+      skia_skia_library_gyp
 
-ifdef $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += $(GRAPHITE_FLAGS)
-else
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := $(GRAPHITE_FLAGS)
+ifneq (1,$(words $(filter $(LOCAL_DISABLE_GRAPHITE),$(LOCAL_MODULE))))
+  ifdef LOCAL_CFLAGS
+    LOCAL_CFLAGS += $(GRAPHITE_FLAGS)
+  else
+    LOCAL_CFLAGS := $(GRAPHITE_FLAGS)
+  endif
+  ifdef LOCAL_LDFLAGS
+    LOCAL_LDFLAGS += $(GRAPHITE_FLAGS)
+  else
+    LOCAL_LDFLAGS := $(GRAPHITE_FLAGS)
+  endif
 endif
-
-ifdef $(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS
-$(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS += $(GRAPHITE_FLAGS)
-else
-$(combo_2nd_arch_prefix)TARGET_GLOBAL_CPPFLAGS := $(GRAPHITE_FLAGS)
-endif
-
-ifdef $(combo_2nd_arch_prefix)TARGET_RELEASE_CPPFLAGS
-$(combo_2nd_arch_prefix)TARGET_RELEASE_CPPFLAGS += $(GRAPHITE_FLAGS)
-else
-$(combo_2nd_arch_prefix)TARGET_RELEASE_CPPFLAGS := $(GRAPHITE_FLAGS)
-endif
-
-ifdef $(combo_var_prefix)GLOBAL_CFLAGS
-$(combo_var_prefix)GLOBAL_CFLAGS += $(GRAPHITE_FLAGS)
-else
-$(combo_var_prefix)GLOBAL_CFLAGS := $(GRAPHITE_FLAGS)
-endif
-
-ifdef $(combo_var_prefix)RELEASE_CFLAGS
-$(combo_var_prefix)RELEASE_CFLAGS += $(GRAPHITE_FLAGS)
-else
-$(combo_var_prefix)RELEASE_CFLAGS := $(GRAPHITE_FLAGS)
-endif 
-
-ifdef $(combo_var_prefix)GLOBAL_CPPFLAGS
-$(combo_var_prefix)GLOBAL_CPPFLAGS += $(GRAPHITE_FLAGS)
-else
-$(combo_var_prefix)GLOBAL_CPPFLAGS := $(GRAPHITE_FLAGS)
-endif
-endif
-#####
+##### DONE

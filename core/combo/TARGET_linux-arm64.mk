@@ -51,10 +51,15 @@ endif
 include $(TARGET_ARCH_SPECIFIC_MAKEFILE)
 include $(BUILD_SYSTEM)/combo/fdo.mk
 
-# You can set TARGET_TOOLS_PREFIX to get gcc from somewhere else
-ifeq ($(strip $(TARGET_TOOLS_PREFIX)),)
-TARGET_TOOLCHAIN_ROOT := prebuilts/gcc/$(HOST_PREBUILT_TAG)/aarch64/aarch64-linux-android-$(TARGET_GCC_VERSION)
-TARGET_TOOLS_PREFIX := $(TARGET_TOOLCHAIN_ROOT)/bin/aarch64-linux-android-
+# You can set TARGET_AND_TOOLS_PREFIX to get gcc from somewhere else
+ifeq ($(strip $(TARGET_AND_TOOLS_PREFIX)),)
+TARGET_AND_TOOLCHAIN_ROOT := prebuilts/gcc/$(HOST_PREBUILT_TAG)/aarch64/aarch64-linux-android-$(TARGET_AND_GCC_VERSION)
+TARGET_AND_TOOLS_PREFIX := $(TARGET_AND_TOOLCHAIN_ROOT)/bin/aarch64-linux-android-
+endif
+
+# You can set TARGET_KERNEL_TOOLS_PREFIX to get gcc from somewhere else
+ifeq ($(strip $(TARGET_KERNEL_TOOLS_PREFIX)),)
+TARGET_KERNEL_TOOLS_PREFIX := aarch64-
 endif
 
 TARGET_CC := $(TARGET_TOOLS_PREFIX)gcc$(HOST_EXECUTABLE_SUFFIX)

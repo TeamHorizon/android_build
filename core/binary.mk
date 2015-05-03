@@ -97,10 +97,55 @@ else
   endif
 endif
 
-ifeq ($(ELECTRIFY),true)
-	# Include custom gcc flags.  Seperate them so they can be easily managed.
-	include $(BUILD_SYSTEM)/graphite.mk
-	include $(BUILD_SYSTEM)/strict.mk
+ifneq ($(strip $(ELECTRIFY)),true)
+##########################################################################
+# Copyright (C) 2014-2015 The SaberMod Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+##########################################################################
+  # Add pthread support
+  ifneq ($(strip $(ENABLE_PTHREAD)),false)
+    include $(BUILD_SYSTEM)/pthread.mk
+  endif
+
+  # Disable -Werror
+  include $(BUILD_SYSTEM)/werror.mk
+
+  # Extra sabermod variables
+  include $(BUILD_SYSTEM)/extra.mk
+
+  # Add some CPU tuning flags
+  ifneq ($(strip $(TUNE_CPU)),false)
+    ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
+     include $(BUILD_SYSTEM)/tune.mk
+    endif
+  endif
+
+  # Add -O3 Optimizations
+  ifneq ($(strip $(O3_OPTIMIZATIONS)),false)
+    include $(BUILD_SYSTEM)/O3.mk
+  endif
+
+  # Don't use graphite on the clang compiler.
+  ifneq ($(strip $(USE_GRAPHITE)),false)
+    ifneq ($(strip $(LOCAL_CLANG)),true)
+      ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
+      # If it gets this far enable graphite by default from here on out.
+      include $(BUILD_SYSTEM)/graphite.mk
+     endif
+   endif
+  endif
+#end SaberMod
 endif
 
 # The following LOCAL_ variables will be modified in this file.

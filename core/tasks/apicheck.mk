@@ -26,10 +26,10 @@ ifeq (,$(filter true, $(WITHOUT_CHECK_API) $(TARGET_BUILD_PDK)))
 droidcore: checkapi
 
 last_released_sdk_version := $(lastword $(call numerically_sort, \
-            $(filter-out current, \
-                $(patsubst $(SRC_API_DIR)/%.txt,%, $(wildcard $(SRC_API_DIR)/*.txt)) \
-             )\
-        ))
+	$(filter-out current, \
+	$(patsubst $(SRC_API_DIR)/%.txt,%, $(wildcard $(SRC_API_DIR)/*.txt)) \
+	)\
+	))
 
 .PHONY: check-public-api
 checkapi : check-public-api
@@ -76,7 +76,7 @@ $(eval $(call check-api, \
 
 .PHONY: update-public-api
 update-public-api: $(INTERNAL_PLATFORM_API_FILE) | $(ACP)
-	@echo Copying current.txt
+	@echo -e ${CL_GRN}"Copying current.txt"${CL_RST}
 	$(hide) $(ACP) $(INTERNAL_PLATFORM_API_FILE) frameworks/base/api/current.txt
 	@echo -e ${CL_GRN}"Copying removed.txt"${CL_RST}
 	$(hide) $(ACP) $(INTERNAL_PLATFORM_REMOVED_API_FILE) frameworks/base/api/removed.txt
