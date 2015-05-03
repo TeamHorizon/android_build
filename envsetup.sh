@@ -1818,7 +1818,53 @@ function make()
     return $ret
 }
 
-
+function saber()
+{
+    echo "What would you like to clone for?"
+    echo "1. ROM"
+    echo "2. Kernel"
+    while read -p "" cchoice
+    do
+    case "$cchoice" in
+	     1)
+    		    TYPE=arm-linux-androideabi
+		    break
+		    ;;
+	     2)
+    		    TYPE=arm-eabi
+		    break
+		    ;;
+	     *)
+		    echo "Please enter 1 or 2"
+		    break
+		    ;;
+    esac
+    done
+    WGET_URL=http://sabermod.net/arm/$TYPE/
+    WGET_DIR=$(gettop)/prebuilts/gcc/linux-x86/arm
+    cd $WGET_DIR
+    rm -rf $TYPE-SM-***
+    wget -r -l1 http://sabermod.net/arm/$TYPE/ -A .tar.bz2
+    mkdir SM
+    mv sabermod.net/arm/$TYPE/* $WGET_DIR/SM/
+    cd SM
+    tar jxf $TYPE-4.8-*.tar.bz2
+    tar jxf $TYPE-4.9-*.tar.bz2
+    mv $WGET_DIR/SM/$TYPE-4.8 $WGET_DIR/$TYPE-SM-4.8
+    mv $WGET_DIR/SM/$TYPE-4.9 $WGET_DIR/$TYPE-SM-4.9
+    if [[ $TYPE -eq "arm-eabi" ]]; then
+      tar jxf $TYPE-5.1-*.tar.bz2
+      tar jxf $TYPE-6.0-*.tar.bz2
+      mv $WGET_DIR/SM/$TYPE-5.1 $WGET_DIR/$TYPE-SM-5.1
+      mv $WGET_DIR/SM/$TYPE-6.0 $WGET_DIR/$TYPE-SM-6.0
+    else
+      echo ""
+    fi
+    cd $(gettop)
+    rm -rf $WGET_DIR/SM
+    rm -rf $WGET_DIR/sabermod.net
+    echo "Done!"
+}
 
 if [ "x$SHELL" != "x/bin/bash" ]; then
     case `ps -o command -p $$` in
