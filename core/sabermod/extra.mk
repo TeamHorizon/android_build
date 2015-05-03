@@ -17,12 +17,12 @@
 
 ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
   ifneq ($(strip $(LOCAL_CLANG)),true)
-    ifdef EXTRA_SABERMOD_GCC_VECTORIZE_CFLAGS
-      ifneq (1,$(words $(filter $(LOCAL_DISABLE_SABERMOD_GCC_VECTORIZE_CFLAGS),$(LOCAL_MODULE))))
+    ifdef EXTRA_SABERMOD_GCC_CFLAGS
+      ifneq (1,$(words $(filter $(LOCAL_DISABLE_SABERMOD_GCC_CFLAGS),$(LOCAL_MODULE))))
         ifdef LOCAL_CFLAGS
-          LOCAL_CFLAGS += $(EXTRA_SABERMOD_GCC_VECTORIZE_CFLAGS)
+          LOCAL_CFLAGS += $(EXTRA_SABERMOD_GCC_CFLAGS)
         else
-          LOCAL_CFLAGS := $(EXTRA_SABERMOD_GCC_VECTORIZE_CFLAGS)
+          LOCAL_CFLAGS := $(EXTRA_SABERMOD_GCC_CFLAGS)
         endif
       endif
     endif
@@ -30,7 +30,7 @@ ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
       ifdef LOCAL_CFLAGS
         LOCAL_CFLAGS += $(EXTRA_SABERMOD_GCC_O3_CFLAGS)
       else
-        LOCAL_CFLAGS := $(EXTRA_SABERMOD_GCC_O3_CFLAGS)
+        LOCAL_CFLAGS := $(EXTRA_SABERMOD_GCC_O3_CFLAGS) 
       endif
     endif
   endif

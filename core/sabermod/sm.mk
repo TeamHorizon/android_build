@@ -15,6 +15,7 @@
 ##########################################################################
 
 include $(BUILD_SYSTEM)/sabermod/arm.mk
+include $(BUILD_SYSTEM)/sabermod/werror.mk
 
 include $(BUILD_SYSTEM)/sabermod/O3.mk
 
@@ -72,6 +73,6 @@ ifdef MAYBE_UNINITIALIZED
   endif
 endif
 
-include $(BUILD_SYSTEM)/sabermod/strict.mk
+#include $(BUILD_SYSTEM)/sabermod/strict.mk
 
 #end SaberMod

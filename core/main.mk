@@ -148,7 +148,7 @@ javac_version_str := $(shell unset _JAVA_OPTIONS && javac -version 2>&1)
 ifeq ($(LEGACY_USE_JAVA6),)
 required_version := "1.7.x"
 required_javac_version := "1.7"
-java_version := $(shell echo '$(java_version_str)' | grep '^java .*[ "]1\.7[\."$$]')
+java_version := $(shell echo '$(java_version_str)' | grep '^java .*[ "]1\.7[\"$$]')
 javac_version := $(shell echo '$(javac_version_str)' | grep '[ "]1\.7[\."$$]')
 else # if LEGACY_USE_JAVA6
 required_version := "1.6.x"
@@ -168,7 +168,7 @@ $(info $(space))
 $(info Please follow the machine setup instructions at)
 $(info $(space)$(space)$(space)$(space)https://source.android.com/source/initializing.html)
 $(info ************************************************************)
-$(error stop)
+#$(error stop)
 endif
 
 # Check for the current JDK.
@@ -177,7 +177,7 @@ endif
 # For Java 1.6, we require Oracle for all host OSes.
 requires_openjdk := false
 ifeq ($(LEGACY_USE_JAVA6),)
-ifeq ($(HOST_OS), linux)
+ifeq ($(HOST_OS),linux)
 requires_openjdk := true
 endif
 endif

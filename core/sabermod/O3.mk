@@ -21,18 +21,18 @@ ifeq ($(strip $(O3_OPTIMIZATIONS)),true)
   ifneq ($(strip $(LOCAL_ARM_MODE))-$(strip $(DISABLE_O3_OPTIMIZATIONS_THUMB)),thumb-true)
     ifneq (1,$(words $(filter $(LOCAL_DISABLE_O3),$(LOCAL_MODULE))))
       ifdef LOCAL_CFLAGS
-        LOCAL_CFLAGS += $(O3_FLAGS) -g
+        LOCAL_CFLAGS += $(O3_FLAGS)
       else
-        LOCAL_CFLAGS := $(O3_FLAGS) -g
+        LOCAL_CFLAGS := $(O3_FLAGS)
       endif
       LOCAL_O3_OPTIMIZATIONS_MODE := on
     else
       ifneq (1,$(words $(filter $(NO_OPTIMIZATIONS),$(LOCAL_MODULE))))
         LOCAL_O3_OPTIMIZATIONS_MODE := off
         ifdef LOCAL_CFLAGS
-          LOCAL_CFLAGS += -O2 -g
+          LOCAL_CFLAGS += -O2
         else
-          LOCAL_CFLAGS := -O2 -g
+          LOCAL_CFLAGS := -O2
         endif
       endif
     endif
@@ -41,4 +41,4 @@ ifeq ($(strip $(O3_OPTIMIZATIONS)),true)
   endif
 else
   LOCAL_O3_OPTIMIZATIONS_MODE := off
-endif
+endif 
