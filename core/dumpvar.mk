@@ -87,5 +87,29 @@ $(info   HOST_OS_EXTRA=$(HOST_OS_EXTRA))
 $(info   HOST_BUILD_TYPE=$(HOST_BUILD_TYPE))
 $(info   BUILD_ID=$(BUILD_ID))
 $(info   OUT_DIR=$(OUT_DIR))
+<<<<<<< HEAD
+=======
+$(info ===============Optimizations================)
+  ifeq ($(ELECTRIFY),true)
+    $(info   ELECTRIFIED=Yes)
+  else
+    ifeq ($(ELECTRIFY),false)
+      $(info   ELECTRIFIED=Legacy Mode)
+    else
+      $(info   ELECTRIFIED=No)
+    endif
+  endif
+$(info   TARGET_ROM_TOOLCHAIN=$(TARGET_AND_GCC_VERSION))
+$(info   TARGET_KERNEL_TOOLCHAIN=$(TARGET_KERNEL_GCC_VERSION))
+$(info   O3_OPTIMIZATIONS=$(O3_OPTIMIZATIONS))
+$(info   ARM_MODE=$(ENABLE_SABERMOD_ARM_MODE))
+$(info   CPU_TUNING=$(ENABLE_TUNE))
+$(info   PTHREAD=$(ENABLE_PTHREAD))
+$(info   EXTRA_LOOP_OPTS=$(ENABLE_EXTRA))
+$(info   GRAPHITE=$(ENABLE_GRAPHITE))
+$(info   STRICT_ALIASING=$(ENABLE_STRICT_ALIASING))
+$(info   USE_LEGACY_GCC=$(USE_LEGACY_GCC))
+$(info   USE_LEGACY_NDK=$(USE_LEGACY_NDK))
+>>>>>>> 1237e58... Toolchain-free Electrify
 $(info ============================================)
 endif

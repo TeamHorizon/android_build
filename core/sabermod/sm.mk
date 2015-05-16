@@ -14,19 +14,35 @@
 # limitations under the License.
 ##########################################################################
 
+# SaberMod Arm Mode 
 include $(BUILD_SYSTEM)/sabermod/arm.mk
 
+# Disable -Werror
+include $(BUILD_SYSTEM)/sabermod/werror.mk
+
+# Tune based on CPU
+ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
+  ifeq ($(strip $(ENABLE_TUNE)),true)
+    include $(BUILD_SYSTEM)/sabermod/tune.mk
+  endif
+endif
+
+# O3 Optimizations
 include $(BUILD_SYSTEM)/sabermod/O3.mk
 
 # Extra sabermod variables
-include $(BUILD_SYSTEM)/sabermod/extra.mk
+ifeq ($(strip $(ENABLE_EXTRA)),true)
+  include $(BUILD_SYSTEM)/sabermod/extra.mk
+endif
 
 # posix thread (pthread) support
 ifneq (1,$(words $(filter $(LOCAL_DISABLE_PTHREAD),$(LOCAL_MODULE))))
-  ifdef LOCAL_CFLAGS
-    LOCAL_CFLAGS += -pthread
-  else
-    LOCAL_CFLAGS := -pthread
+  ifeq ($(strip $(ENABLE_PTHREAD)),true)
+    ifdef LOCAL_CFLAGS
+      LOCAL_CFLAGS += -pthread
+    else
+      LOCAL_CFLAGS := -pthread
+    endif
   endif
 endif
 
@@ -72,6 +88,6 @@ ifdef MAYBE_UNINITIALIZED
   endif
 endif
 
-include $(BUILD_SYSTEM)/sabermod/strict.mk
-
+# Disable Strict because it is not currently in use
+#include $(BUILD_SYSTEM)/sabermod/strict.mk
 #end SaberMod
