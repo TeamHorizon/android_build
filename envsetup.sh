@@ -625,6 +625,14 @@ function lunch()
 
     echo
 
+    if [[ $USE_PREBUILT_CHROMIUM -eq 1 ]]; then
+        chromium_prebuilt
+    else
+        # Unset flag in case user opts out later on
+        export PRODUCT_PREBUILT_WEBVIEWCHROMIUM=""
+    fi
+
+
     set_stuff_for_environment
     printconfig
 }
@@ -1818,7 +1826,73 @@ function make()
     return $ret
 }
 
+function chromium_prebuilt() {
+    T=$(gettop)
+    export TARGET_DEVICE=$(get_build_var TARGET_DEVICE)
+    hash=$T/prebuilts/chromium/$TARGET_DEVICE/hash.txt
+    libsCheck=$T/prebuilts/chromium/$TARGET_DEVICE/lib/libwebviewchromium.so
+    appCheck=$T/prebuilts/chromium/$TARGET_DEVICE/app/webview
+    device_target=$T/prebuilts/chromium/$TARGET_DEVICE/
 
+    if [ -r $hash ] && [ $(git --git-dir=$T/external/chromium_org/.git --work-tree=$T/external/chromium_org rev-parse --verify HEAD) == $(cat $hash) ] && [ -f $libsCheck ] && [ -d $appCheck ]; then
+        export PRODUCT_PREBUILT_WEBVIEWCHROMIUM=yes
+        echo "** Prebuilt Chromium is up-to-date; Will be used for build **"
+    else
+        export PRODUCT_PREBUILT_WEBVIEWCHROMIUM=no
+        rm -rfv $device_target
+        echo ""
+        echo "** Prebuilt Chromium out-of-date/not found; Will build from source **"
+        echo ""
+    fi
+}
+
+function saber()
+{
+    echo "What would you like to clone for?"
+    echo "1. ROM"
+    echo "2. Kernel"
+    while read -p "" cchoice
+    do
+    case "$cchoice" in
+	     1)
+    		    TYPE=arm-linux-androideabi
+		    break
+		    ;;
+	     2)
+    		    TYPE=arm-eabi
+		    break
+		    ;;
+	     *)
+		    echo "Please enter 1 or 2"
+		    break
+		    ;;
+    esac
+    done
+    WGET_URL=http://sabermod.net/arm/$TYPE/
+    WGET_DIR=$(gettop)/prebuilts/gcc/linux-x86/arm
+    cd $WGET_DIR
+    rm -rf $TYPE-SM-***
+    wget -r -l1 http://sabermod.net/arm/$TYPE/ -A .tar.bz2
+    mkdir SM
+    mv sabermod.net/arm/$TYPE/* $WGET_DIR/SM/
+    cd SM
+    tar jxf $TYPE-4.8-*.tar.bz2
+    tar jxf $TYPE-4.9-*.tar.bz2
+    mv $WGET_DIR/SM/$TYPE-4.8 $WGET_DIR/$TYPE-SM-4.8
+    mv $WGET_DIR/SM/$TYPE-4.9 $WGET_DIR/$TYPE-SM-4.9
+    if [[ $TYPE -eq "arm-eabi" ]]; then
+      tar jxf $TYPE-5.1-*.tar.bz2
+      tar jxf $TYPE-6.0-*.tar.bz2
+      mv $WGET_DIR/SM/$TYPE-5.1 $WGET_DIR/$TYPE-SM-5.1
+      mv $WGET_DIR/SM/$TYPE-6.0 $WGET_DIR/$TYPE-SM-6.0
+    else
+      echo ""
+    fi
+    cd $(gettop)
+    rm -rf $WGET_DIR/SM
+    rm -rf $WGET_DIR/sabermod.net
+    echo "Done!"
+}
 
 if [ "x$SHELL" != "x/bin/bash" ]; then
     case `ps -o command -p $$` in
