@@ -27,7 +27,7 @@ ifeq ($(strip $(ELECTRIFY)),true)
   export O3_OPTIMIZATIONS := true
   export ENABLE_SABERMOD_ARM_MODE:= true
   export ENABLE_TUNE := true
-  export ENABLE_PTHREAD := false
+  export ENABLE_PTHREAD := true
   export ENABLE_EXTRA := true
   export ENABLE_GRAPHITE := false
   export ENABLE_STRICT_ALIASING := false
