@@ -34,7 +34,7 @@ ifeq ($(strip $(ELECTRIFY)),true)
   export USE_LEGACY_GCC := false
   export USE_LEGACY_NDK := false
 else
-  ifeq ($(strip $(ELECTRIFY)),false)
+  ifeq ($(strip $(ELECTRIFY)),)
     ########################
     ##       DEFINE       ##
     ##  STABLE TOOLCHAINS ##
@@ -55,7 +55,7 @@ else
     export USE_LEGACY_GCC := true
     export USE_LEGACY_NDK := true
   else
-    ifeq ($(strip $(ELECTRIFY)),)
+    ifeq ($(strip $(ELECTRIFY)),false)
       # Unset Variables
       export TARGET_SM_AND := 4.9
       export TARGET_SM_KERNEL := 4.8
