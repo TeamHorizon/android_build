@@ -57,7 +57,7 @@ else
   else
     ifeq ($(strip $(ELECTRIFY)),false)
       # Unset Variables
-      export TARGET_SM_AND := 4.9
+      export TARGET_SM_AND := 4.8
       export TARGET_SM_KERNEL := 4.8
       export TARGET_ARCH := arm
       export O3_OPTIMIZATIONS := 
