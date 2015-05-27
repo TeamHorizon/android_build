@@ -323,17 +323,23 @@ user_variant := $(filter user userdebug,$(TARGET_BUILD_VARIANT))
 enable_target_debugging := true
 tags_to_install :=
 ifneq (,$(user_variant))
+
   # Target is secure in user builds.
-  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1
+  ifneq ($(strip $(FORCE_DISABLE_DEBUGGING)),true)
+    ifeq ($(user_variant),userdebug)
 
-  ifeq ($(user_variant),userdebug)
-    # Pick up some extra useful tools
-    tags_to_install += debug
+      # Pick up some extra useful tools
+      tags_to_install += debug
 
-    # Enable Dalvik lock contention logging for userdebug builds.
-    ADDITIONAL_BUILD_PROPERTIES += dalvik.vm.lockprof.threshold=500
+      # Enable Dalvik lock contention logging for userdebug builds.
+      ADDITIONAL_BUILD_PROPERTIES += dalvik.vm.lockprof.threshold=500
+    else
+      # Disable debugging in plain user builds.
+      enable_target_debugging :=
+    endif
   else
-    # Disable debugging in plain user builds.
+    # Force debugging off.
     enable_target_debugging :=
   endif
 
