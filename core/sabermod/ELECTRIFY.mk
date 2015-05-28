@@ -23,7 +23,7 @@ ifeq ($(strip $(ELECTRIFY)),true)
   export TARGET_SM_KERNEL := 4.9
 
   # Define Optimizations for ELECTRIFY to use
-  export TARGET_ARCH := arm
+  export LOCAL_ARCH := arm
   export O3_OPTIMIZATIONS := true
   export ENABLE_SABERMOD_ARM_MODE:= true
   export ENABLE_TUNE := true
@@ -44,7 +44,7 @@ else
     export TARGET_SM_KERNEL := 4.8
   
     # Remove optimizations
-    export TARGET_ARCH := arm
+    export LOCAL_ARCH := arm
     export O3_OPTIMIZATIONS := false
     export ENABLE_SABERMOD_ARM_MODE:= false
     export ENABLE_TUNE := false
@@ -59,7 +59,7 @@ else
       # Unset Variables
       export TARGET_SM_AND := 4.8
       export TARGET_SM_KERNEL := 4.8
-      export TARGET_ARCH := arm
+      export LOCAL_ARCH := arm
       export O3_OPTIMIZATIONS := 
       export ENABLE_SABERMOD_ARM_MODE:=
       export ENABLE_TUNE :=
