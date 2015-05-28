@@ -97,7 +97,12 @@ else
   endif
 endif
 
-include $(BUILD_SYSTEM)/sabermod/sm.mk
+ifeq ($(strip $(ELECTRIFY)),true)
+  ifdef SM_VENDOR
+    # Include sabermod build system configs
+    include $(SM_VENDOR)/build/sm.mk
+  endif
+endif
 
 
 # The following LOCAL_ variables will be modified in this file.
