@@ -20,7 +20,7 @@ ifeq ($(strip $(ELECTRIFY)),true)
   ##        HERE        ##
   ########################
   export TARGET_SM_AND := 4.8
-  export TARGET_SM_KERNEL := 4.9
+  export TARGET_SM_KERNEL := 4.8
 
   # Define Optimizations for ELECTRIFY to use
   export LOCAL_ARCH := arm
