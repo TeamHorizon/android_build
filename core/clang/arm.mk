@@ -23,8 +23,7 @@ CLANG_CONFIG_arm_UNKNOWN_CFLAGS := \
   -fno-strict-volatile-bitfields \
   -fno-align-jumps \
   -Wa,--noexecstack \
-  -mfpu=neon-vfpv4 \
-  -mfloat-abi=softfp
+  -mfpu=neon-vfpv4 
 
 define subst-clang-incompatible-arm-flags
   $(subst -march=armv5te,-march=armv5t,\
