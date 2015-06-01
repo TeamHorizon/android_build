@@ -97,10 +97,14 @@ else
   endif
 endif
 
+# For the weary and the lonely
+# For the dreamers and the hopeful
+# For those who won't be but down
+# ELECTRIFY WILL RISE AGAIN
 ifeq ($(strip $(ELECTRIFY)),true)
   ifdef SM_VENDOR
     # Include sabermod build system configs
-    include $(SM_VENDOR)/build/sm.mk
+    # Some day, but not today.
   endif
 endif
 
