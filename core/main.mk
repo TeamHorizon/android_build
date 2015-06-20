@@ -71,7 +71,7 @@ FORCE:
 
 # These goals don't need to collect and include Android.mks/CleanSpec.mks
 # in the source tree.
-dont_bother_goals := clean clobber dataclean dirty installclean peter joe \
+dont_bother_goals := clean clobber dataclean deviceclean dirty installclean peter joe \
     help out \
     snod systemimage-nodeps \
     stnod systemtarball-nodeps \
@@ -1054,6 +1054,12 @@ clean:
 
 .PHONY: clobber
 clobber: clean
+
+# Clears out only target files
+.PHONY: deviceclean
+deviceclean:
+	@rm -rf $(OUT_DIR)/target/product/$(TARGET_DEVICE)
+	@echo -e ${CL_GRN}"$(TARGET_DEVICE) files removed successfully"${CL_RST}
 
 # Clears out zip and build.prop
 .PHONY: dirty
