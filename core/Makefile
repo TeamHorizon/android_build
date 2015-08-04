@@ -1152,8 +1152,15 @@ FULL_SYSTEMIMAGE_DEPS := $(INTERNAL_SYSTEMIMAGE_FILES) $(INTERNAL_USERIMAGES_DEP
 # system image.
 INSTALLED_FILES_FILE := $(PRODUCT_OUT)/installed-files.txt
 $(INSTALLED_FILES_FILE): $(FULL_SYSTEMIMAGE_DEPS)
-	$(hide) ./vendor/xenonhd/tools/changelog
+CHANGELOG_FILE := changelog
+ifeq ($(HOST_OS), Darwin)
+	CHANGELOG_FILE := changelog_mac
+endif
+$(INSTALLED_FILES_FILE): $(FULL_SYSTEMIMAGE_DEPS)
+ifneq ($(SKIP_CHANGELOG), 1)
+	$(hide) ./vendor/xenonhd/tools/$(CHANGELOG_FILE)
 	$(hide) mv $(PRODUCT_OUT)/Changelog.txt $(PRODUCT_OUT)/$(PLATFORM_VERSION)-$(TARGET_PRODUCT).txt
+endif
 	@echo Installed file list: $@
 	@mkdir -p $(dir $@)
 	@rm -f $@
