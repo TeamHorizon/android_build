@@ -981,6 +981,16 @@ function croot()
     fi
 }
 
+function gerritme()
+{
+    T=$(gettop)
+    if [ "$T" ]; then
+	$(gettop)/vendor/xenonhd/tools/gerritme.pl $*
+    else
+	echo "Couldn't locate the android root."
+    fi
+}
+
 function cout()
 {
     if [  "$OUT" ]; then
