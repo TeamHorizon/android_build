@@ -981,6 +981,24 @@ function croot()
     fi
 }
 
+function gittools ()
+{
+    git config --global alias.sign 'commit -s'
+    git config --global alias.unstage 'reset HEAD --'
+    git config --global alias.commitstats 'shortlog --numbered --summary --email'
+    git config --global alias.cob 'checkout -b'
+    git config --global alias.ec 'config --global -e'
+    git config --global alias.amend 'commit --amend'
+    git config --global alias.amenda 'commit --amend -a'
+    git config --global alias.wipe '!git add -A && git commit -qm "WIPE SAVEPOINT" && git reset HEAD~1 --hard'
+    git config --global alias.prune-all '!git remote | xargs -n 1 git remote prune'
+    git config --global alias.abbr '!sh -c "git rev-list --all | grep ^$1 | while read commit; do git --no-pager log -n1 --pretty=format:\"%H %ci %an %s%n\" $commit; done" -'
+    git config --global alias.ls 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate'
+    git config --global alias.ll 'log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat'
+    git config --global alias.lds 'log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short'
+    git config --global alias.f '!git ls-files | grep -i'
+}
+
 function cout()
 {
     if [  "$OUT" ]; then
