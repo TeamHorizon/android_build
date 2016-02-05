@@ -10,6 +10,9 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - mmm:     Builds all of the modules in the supplied directories, but not their dependencies.
            To limit the modules being built use the syntax: mmm dir/:target1,target2.
 - mma:     Builds all of the modules in the current directory, and their dependencies.
+- mmp:     Builds all of the modules in the current directory and pushes them to the device.
+- mmap:    Builds all of the modules in the current directory, and its dependencies, then pushes the package to the device.
+- mmmp:    Builds all of the modules in the supplied directories and pushes them to the device.
 - mmma:    Builds all of the modules in the supplied directories, and their dependencies.
 - mms:     Short circuit builder. Quickly re-build the kernel, rootfs, boot and system images
            without deep dependencies. Requires the full build to have run before.
@@ -1907,6 +1910,7 @@ EOF
 
 alias mmp='dopush mm'
 alias mmmp='dopush mmm'
+alias mmap='dopush mma'
 alias mkap='dopush mka'
 alias cmkap='dopush cmka'
 
