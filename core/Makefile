@@ -1159,7 +1159,7 @@ endif
 $(INSTALLED_FILES_FILE): $(FULL_SYSTEMIMAGE_DEPS)
 ifneq ($(SKIP_CHANGELOG), 1)
 	$(hide) ./vendor/xenonhd/tools/$(CHANGELOG_FILE)
-	$(hide) mv $(PRODUCT_OUT)/Changelog.txt $(PRODUCT_OUT)/$(PLATFORM_VERSION)-$(TARGET_PRODUCT).txt
+	$(hide) mv $(PRODUCT_OUT)/Changelog.txt $(PRODUCT_OUT)/Changelog-$(shell date +"%m-%d-%y").txt
 endif
 	@echo Installed file list: $@
 	@mkdir -p $(dir $@)
