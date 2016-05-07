@@ -532,7 +532,7 @@ function brunch()
     return $?
 }
 
-function powerbrunch()
+function xenonify()
 {
     breakfast $*
     if [ $? -eq 0 ]; then
